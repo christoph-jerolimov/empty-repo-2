@@ -1,7 +1,12 @@
 ---
+import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import LiveEditor from './LiveEditor.astro';
-import { EDITIONS, chaptersFor, chapterHref } from '../data/standard';
+import PageIntro from './PageIntro.astro';
+import SplitLayout from './SplitLayout.astro';
+import SideNav from './SideNav.astro';
+import Prose from './Prose.astro';
+import Pager from './Pager.astro';
+import { chapterHref, getChapters, getEditions, searchText } from '../lib/content';
 import { LINKS } from '../data/site';
 
 interface Props {
@@ -11,134 +16,75 @@ interface Props {
 }
 
 const { editionId, n } = Astro.props;
-const edition = EDITIONS.find((e) => e.id === editionId)!;
-const chapters = chaptersFor(editionId);
+const editions = await getEditions();
+const edition = editions.find((e) => e.id === editionId)!;
+const chapters = await getChapters(editionId);
 const chapter = chapters[n - 1];
-const searchText = (c: (typeof chapters)[number]) =>
-  [c.de, c.en, ...c.paras, ...(c.subs ?? [])].join(' ').toLowerCase();
+const { Content } = await render(chapter);
 ---
 <Base
-  title={`${chapter.de} – ${edition.label}`}
-  description={`Kapitel ${n} des ECMAScript-Standards (${edition.label}) auf Deutsch: ${chapter.de}.`}
+  title={`${chapter.data.title} – ${edition.data.label}`}
+  description={`Kapitel ${n} des ECMAScript-Standards (${edition.data.label}) auf Deutsch: ${chapter.data.title}.`}
   current="standard"
 >
   <main class="container page-main">
-    <div class="page-intro">
-      <h6 class="kicker">ECMA-262 · Deutsche Ausgabe</h6>
-      <h1>Der Standard – übersetzt, kommentiert, klickbar.</h1>
-      <p>Wähl eine Ausgabe, klick dich durch die Kapitel. Wo ein Beispiel dabei ist, kannst du es direkt im Browser ausführen und verändern.</p>
-    </div>
+    <PageIntro
+      kicker="ECMA-262 · Deutsche Ausgabe"
+      title="Der Standard – übersetzt, kommentiert, klickbar."
+      lead="Wähl eine Ausgabe, klick dich durch die Kapitel. Wo ein Beispiel dabei ist, kannst du es direkt im Browser ausführen und verändern."
+    />
 
     <div class="edition-bar">
       <nav class="seg" aria-label="Ausgabe">
-        {EDITIONS.map((e) => (
-          <a class="seg-opt" href={chapterHref(e.id, 1)} aria-current={e.id === editionId ? 'page' : undefined}>{e.label}</a>
+        {editions.map((e) => (
+          <a class="seg-opt" href={chapterHref(e.id, 1)} aria-current={e.id === editionId ? 'page' : undefined}>{e.data.label}</a>
         ))}
       </nav>
-      <div class="text-muted edition-meta">{edition.meta}</div>
+      <div class="text-muted edition-meta">{edition.data.meta}</div>
     </div>
-    <p class="highlights"><span class="strong">Neu in dieser Ausgabe:</span> {edition.highlights}</p>
+    <p class="highlights"><span class="strong">Neu in dieser Ausgabe:</span> {edition.data.highlights}</p>
 
-    <div class="split">
-      <aside class="split-aside">
-        <input class="input chapter-search" type="search" placeholder="Kapitel suchen – z. B. „Promise“" aria-label="Kapitel suchen" data-chapter-search />
-        <nav class="side-list" aria-label="Kapitel">
-          {chapters.map((c, i) => (
-            <a
-              href={chapterHref(editionId, i + 1)}
-              class="es-row side-item chapter-item"
-              aria-current={i + 1 === n ? 'page' : undefined}
-              data-search={searchText(c)}
-            >
-              <span class="num">{i + 1}</span><span>{c.de}</span>
-            </a>
-          ))}
-          <div class="text-muted no-hits" data-no-hits hidden>Kein Kapitel passt zu „<span data-query></span>“.</div>
-        </nav>
-      </aside>
-
-      <article class="split-main">
-        <h6 class="kicker chapter-kicker">Kapitel {n} · {chapter.en}</h6>
-        <h2 class="chapter-title">{chapter.de}</h2>
-        {chapter.paras.map((p) => <p class="chapter-p">{p}</p>)}
-        {chapter.subs && chapter.subs.length > 0 && (
-          <>
-            <h4 class="section-h">Abschnitte</h4>
-            <ol class="subs">
-              {chapter.subs.map((s) => <li>{s}</li>)}
-            </ol>
-          </>
-        )}
-        {chapter.example && (
-          <>
-            <h4 class="section-h">Ausprobieren</h4>
-            <p class="text-muted hint">Ändere den Code und drück „Ausführen“ (oder ⌘/Strg + Enter).</p>
-            <LiveEditor title={chapter.example.title} code={chapter.example.code} />
-          </>
-        )}
-        {chapter.draft && (
+    <SplitLayout>
+      <SideNav
+        slot="side"
+        label="Kapitel"
+        searchPlaceholder="Kapitel suchen – z. B. „Promise“"
+        emptyText="Kein Kapitel passt zu"
+        searchFromUrl
+        items={chapters.map((c, i) => ({
+          href: chapterHref(editionId, i + 1),
+          label: c.data.title,
+          current: i + 1 === n,
+          search: searchText(c.data.title, c.data.en, c.body),
+        }))}
+      />
+      <article>
+        <h6 class="kicker chapter-kicker">Kapitel {n} · {chapter.data.en}</h6>
+        <h2 class="chapter-title">{chapter.data.title}</h2>
+        <Prose variant="chapter"><Content /></Prose>
+        {chapter.data.draft && (
           <p class="draft">
             <span class="tag tag-accent-2">Übersetzung in Arbeit</span>Dieses Kapitel ist noch nicht vollständig übersetzt. <a href={LINKS.github}>Hilf auf GitHub mit.</a>
           </p>
         )}
-        <div class="pager">
-          {n > 1
-            ? <a class="btn btn-ghost" href={chapterHref(editionId, n - 1)}>← Vorheriges Kapitel</a>
-            : <span class="btn btn-ghost" aria-disabled="true">← Vorheriges Kapitel</span>}
-          {n < chapters.length
-            ? <a class="btn btn-ghost" href={chapterHref(editionId, n + 1)}>Nächstes Kapitel →</a>
-            : <span class="btn btn-ghost" aria-disabled="true">Nächstes Kapitel →</span>}
-        </div>
+        <Pager
+          prev={n > 1 ? chapterHref(editionId, n - 1) : undefined}
+          next={n < chapters.length ? chapterHref(editionId, n + 1) : undefined}
+          prevLabel="Vorheriges Kapitel"
+          nextLabel="Nächstes Kapitel"
+        />
       </article>
-    </div>
+    </SplitLayout>
   </main>
 </Base>
-
-<script>
-  const input = document.querySelector<HTMLInputElement>('[data-chapter-search]');
-  const items = [...document.querySelectorAll<HTMLElement>('.chapter-item')];
-  const noHits = document.querySelector<HTMLElement>('[data-no-hits]');
-  const queryEl = document.querySelector<HTMLElement>('[data-query]');
-
-  function filter() {
-    if (!input || !noHits || !queryEl) return;
-    const q = input.value.trim().toLowerCase();
-    let shown = 0;
-    for (const item of items) {
-      const hit = !q || (item.dataset.search ?? '').includes(q);
-      item.hidden = !hit;
-      if (hit) shown++;
-    }
-    noHits.hidden = shown > 0;
-    queryEl.textContent = input.value;
-  }
-
-  // Queries from the header search on the home page arrive as ?q=…
-  const q = new URLSearchParams(location.search).get('q');
-  if (input && q) input.value = q;
-  input?.addEventListener('input', filter);
-  filter();
-</script>
 
 <style>
   .edition-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 15px 30px; margin: 30px 0 10px; }
   .edition-meta { font-size: 14px; }
   .highlights { font-size: 15px; max-width: 720px; }
   .strong { font-weight: 600; }
-  .chapter-search { margin-bottom: 15px; }
-  .chapter-item { grid-template-columns: 34px 1fr; }
-  .chapter-item[hidden] { display: none; }
-  .no-hits { padding: 10px 8px; font-size: 14px; }
   .chapter-kicker { margin-bottom: 8px; }
   .chapter-title { font-size: clamp(28px, 4.7vw, 36px); margin-bottom: 20px; text-wrap: balance; }
-  .chapter-p { font-size: 17px; line-height: 1.6; }
-  .section-h { margin-top: 30px; }
-  .subs { margin: 0 0 20px; padding-left: 22px; font-size: 15px; line-height: 1.7; columns: 2; column-gap: 30px; }
-  .hint { font-size: 13px; }
   .draft { margin-top: 30px; font-size: 14px; }
   .draft .tag { margin-right: 8px; }
-
-  @media (max-width: 640px) {
-    .subs { columns: 1; }
-  }
 </style>

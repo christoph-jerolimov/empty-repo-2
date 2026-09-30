@@ -1,0 +1,21 @@
+/* <es-live-editor> — global because editors are also emitted from Markdown content. */
+.le {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  background: var(--color-surface); border-radius: var(--radius-lg); overflow: hidden;
+  font-size: 13px; box-shadow: var(--shadow-sm);
+}
+.le-pane { display: flex; flex-direction: column; min-width: 0; }
+.le-out-pane { border-left: 1px solid var(--color-divider); }
+.le-bar {
+  display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px;
+  font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);
+}
+.le-bar-out { padding: 8px 14px; color: var(--color-neutral-600); min-height: 37px; }
+.le-run { margin-left: auto; padding: 4px 12px; font-size: 12px; white-space: nowrap; flex: none; }
+.le-code {
+  flex: 1; min-height: 150px; margin: 0; padding: 12px 14px; border: 0; resize: vertical;
+  background: transparent; color: var(--color-text); font-size: 13px; line-height: 1.6;
+  outline: none; tab-size: 2; caret-color: var(--color-accent); white-space: pre; overflow: auto;
+}
+.le-out { padding: 12px 14px; font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; flex: 1; }
+.le-hint { font-size: 13px; }

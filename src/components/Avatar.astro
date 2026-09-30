@@ -1,0 +1,21 @@
+---
+// Round initials badge for authors.
+interface Props {
+  initials: string;
+  tone: 'accent' | 'accent-2' | 'neutral';
+  size?: number;
+}
+
+const { initials, tone, size = 44 } = Astro.props;
+---
+<span class:list={['avatar', tone]} style={`--size:${size}px`} aria-hidden="true">{initials}</span>
+
+<style>
+  .avatar {
+    width: var(--size); height: var(--size); flex: none; border-radius: 50%;
+    display: grid; place-items: center; font-weight: 600; font-size: calc(var(--size) / 3);
+  }
+  .accent { background: var(--color-accent-200); color: var(--color-accent-800); }
+  .accent-2 { background: var(--color-accent-2-200); color: var(--color-accent-2-800); }
+  .neutral { background: var(--color-neutral-300); color: var(--color-neutral-900); }
+</style>

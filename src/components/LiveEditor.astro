@@ -1,56 +1,12 @@
 ---
+// Runnable code example. Markdown content gets the same markup from ```js live``` fences.
+import { liveEditorHtml } from '../lib/live-editor';
+
 interface Props {
   code: string;
   title?: string;
 }
 
-const { code, title = 'Beispiel' } = Astro.props;
-const rows = Math.max(code.split('\n').length, 5);
+const { code, title } = Astro.props;
 ---
-<es-live-editor class="le">
-  <div class="le-pane">
-    <div class="le-bar">
-      <span>{title}</span>
-      <button type="button" class="btn btn-primary le-run" data-run>Ausführen ▸</button>
-    </div>
-    <textarea
-      class="es-code le-code"
-      data-code
-      rows={rows}
-      spellcheck="false"
-      autocapitalize="off"
-      autocomplete="off"
-      aria-label={`Code: ${title}`}
-    >{code}</textarea>
-  </div>
-  <div class="le-pane le-out-pane">
-    <div class="le-bar le-bar-out">Konsole</div>
-    <div class="es-code le-out" data-output role="log" aria-live="polite" aria-label={`Ausgabe: ${title}`}></div>
-  </div>
-</es-live-editor>
-
-<script>
-  import '../scripts/live-editor';
-</script>
-
-<style>
-  .le {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-    background: var(--color-surface); border-radius: var(--radius-lg); overflow: hidden;
-    font-size: 13px; box-shadow: var(--shadow-sm);
-  }
-  .le-pane { display: flex; flex-direction: column; min-width: 0; }
-  .le-out-pane { border-left: 1px solid var(--color-divider); }
-  .le-bar {
-    display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px;
-    font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent-700);
-  }
-  .le-bar-out { padding: 8px 14px; color: var(--color-neutral-600); min-height: 37px; }
-  .le-run { margin-left: auto; padding: 4px 12px; font-size: 12px; white-space: nowrap; flex: none; }
-  .le-code {
-    flex: 1; min-height: 150px; margin: 0; padding: 12px 14px; border: 0; resize: vertical;
-    background: transparent; color: var(--color-text); font-size: 13px; line-height: 1.6;
-    outline: none; tab-size: 2; caret-color: var(--color-accent); white-space: pre; overflow: auto;
-  }
-  .le-out { padding: 12px 14px; font-size: 13px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; flex: 1; }
-</style>
+<Fragment set:html={liveEditorHtml(code, title)} />

@@ -1,9 +1,9 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import StandardView from '../../../components/StandardView.astro';
-import { EDITIONS } from '../../../data/standard';
+import { getEditions } from '../../../lib/content';
 
-export const getStaticPaths = (() => EDITIONS.map((e) => ({ params: { ausgabe: e.id } }))) satisfies GetStaticPaths;
+export const getStaticPaths = (async () => (await getEditions()).map((e) => ({ params: { ausgabe: e.id } }))) satisfies GetStaticPaths;
 
 const { ausgabe } = Astro.params;
 ---

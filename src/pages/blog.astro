@@ -1,65 +1,57 @@
 ---
+import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import LiveEditor from '../components/LiveEditor.astro';
-import { POSTS } from '../data/posts';
+import PageIntro from '../components/PageIntro.astro';
+import SplitLayout from '../components/SplitLayout.astro';
+import Prose from '../components/Prose.astro';
+import ProgressBar from '../components/ProgressBar.astro';
+import { dateLong, getAuthor, getPosts, monthYear } from '../lib/content';
 import { LINKS } from '../data/site';
+
+const posts = await Promise.all(
+  (await getPosts()).map(async (p) => ({ ...p, author: await getAuthor(p.data.author), Content: (await render(p)).Content })),
+);
 
 // Archive: one entry per month, linking to the newest post of that month.
 const archive = new Map<string, string>();
-for (const p of POSTS) {
-  const month = p.date.replace(/^\d+\.\s*/, '');
-  if (!archive.has(month)) archive.set(month, p.slug);
+for (const p of posts) {
+  const month = monthYear(p.data.date);
+  if (!archive.has(month)) archive.set(month, p.id);
 }
 ---
 <Base title="Blog" description="Neue Übersetzungen, TC39-Rückblicke und Änderungen an EcmaScript.de." current="blog">
   <main class="container page-main">
-    <div class="page-intro">
-      <h6 class="kicker">Blog</h6>
-      <h1>Was auf der Seite und im Komitee passiert.</h1>
-      <p>Kurze Notizen: neue Übersetzungen, TC39-Rückblicke, Änderungen an EcmaScript.de. Auch als <a href={LINKS.rss}>RSS</a>.</p>
-    </div>
+    <PageIntro kicker="Blog" title="Was auf der Seite und im Komitee passiert.">
+      Kurze Notizen: neue Übersetzungen, TC39-Rückblicke, Änderungen an EcmaScript.de. Auch als <a href={LINKS.rss}>RSS</a>.
+    </PageIntro>
 
-    <div class="layout">
-      <div class="posts">
-        {POSTS.map((p) => (
-          <article class="post" id={p.slug}>
-            <div class="text-muted post-meta">{p.date} · {p.author}</div>
-            <h2><a href={`#${p.slug}`} class="es-link">{p.title}</a></h2>
-            {p.paras.map((t) => <p>{t}</p>)}
-            {p.code && <LiveEditor title={p.codeTitle} code={p.code} />}
-          </article>
-        ))}
-      </div>
-      <aside class="aside">
+    <SplitLayout variant="side-right">
+      {posts.map(({ id, data, author, Content }) => (
+        <article class="post" id={id}>
+          <div class="text-muted post-meta">{dateLong(data.date)} · {author.data.short}</div>
+          <h2><a href={`#${id}`} class="es-link">{data.title}</a></h2>
+          <Prose variant="post"><Content /></Prose>
+        </article>
+      ))}
+      <Fragment slot="side">
         <h6 class="kicker">Nächstes TC39-Treffen</h6>
         <p class="aside-p">13.–15. Oktober 2026, Tokio (hybrid). Tagesordnung erscheint zwei Wochen vorher im <a href={LINKS.tc39Agendas}>Agenda-Repo</a>.</p>
         <h6 class="kicker spaced">Übersetzungsstand</h6>
-        <div class="progress-box">
-          <div class="progress-row"><span>Kapitel übersetzt</span><span class="strong">24 / 29</span></div>
-          <div class="progress"><div style="width:83%"></div></div>
-          <span class="text-muted small">Fehlen: 3, 8, 29 und Anhänge A–F</span>
-        </div>
+        <ProgressBar label="Kapitel übersetzt" value={24} total={29} note="Fehlen: 3, 8, 29 und Anhänge A–F" />
         <h6 class="kicker spaced">Archiv</h6>
         <div class="archive">
-          {[...archive].map(([month, slug]) => <a href={`#${slug}`}>{month}</a>)}
+          {[...archive].map(([month, id]) => <a href={`#${id}`}>{month}</a>)}
         </div>
-      </aside>
-    </div>
+      </Fragment>
+    </SplitLayout>
   </main>
 </Base>
 
 <style>
-  .layout { display: flex; flex-wrap: wrap; gap: 60px; margin-top: 50px; align-items: flex-start; }
-  .posts { flex: 3 1 480px; min-width: 0; max-width: 760px; }
   .post { margin-bottom: 60px; scroll-margin-top: 20px; }
   .post-meta { font-size: 13px; margin-bottom: 8px; }
   .post h2 { font-size: clamp(26px, 4.2vw, 32px); margin-bottom: 12px; text-wrap: balance; }
-  .post p { font-size: 16px; line-height: 1.6; }
-  .aside { flex: 1 1 240px; max-width: 300px; }
   .aside-p { font-size: 15px; line-height: 1.5; }
   .spaced { margin-top: 30px; }
-  .progress-box, .archive { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
-  .progress-row { display: flex; justify-content: space-between; }
-  .strong { font-weight: 600; }
-  .small { font-size: 12px; }
+  .archive { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
 </style>

@@ -1,0 +1,61 @@
+---
+// Searchable, numbered navigation list (spec chapters, tutorials). Filtering: scripts/filter-list.ts.
+export interface SideNavItem {
+  href: string;
+  label: string;
+  /** Small second line under the label. */
+  sub?: string;
+  current?: boolean;
+  /** Lower-case text the search box matches against. */
+  search: string;
+}
+
+interface Props {
+  items: SideNavItem[];
+  label: string;
+  searchPlaceholder: string;
+  /** Shown when nothing matches; the query is appended in quotes. */
+  emptyText?: string;
+  /** Pre-fill the search from ?q= in the URL. */
+  searchFromUrl?: boolean;
+  size?: 'compact' | 'roomy';
+}
+
+const { items, label, searchPlaceholder, emptyText, searchFromUrl = false, size = 'compact' } = Astro.props;
+---
+<div data-filter>
+  <input
+    class="input search"
+    type="search"
+    placeholder={searchPlaceholder}
+    aria-label={searchPlaceholder}
+    data-filter-input
+    data-filter-from-url={searchFromUrl ? '' : undefined}
+  />
+  <nav class:list={['list', size]} aria-label={label}>
+    {items.map((item, i) => (
+      <a href={item.href} class="es-row item" aria-current={item.current ? 'page' : undefined} data-filter-item data-search={item.search}>
+        <span class="num">{i + 1}</span>
+        <span>{item.label}{item.sub && <span class="text-muted sub">{item.sub}</span>}</span>
+      </a>
+    ))}
+    {emptyText && <div class="text-muted empty" data-filter-empty hidden>{emptyText} „<span data-filter-query></span>“.</div>}
+  </nav>
+</div>
+
+<style>
+  .search { margin-bottom: 15px; }
+  .list { display: flex; flex-direction: column; }
+  .item {
+    display: grid; grid-template-columns: 34px 1fr; gap: 8px; padding: 7px 8px;
+    border-radius: var(--radius-md); color: var(--color-text); text-decoration: none;
+    font-size: 14px; line-height: 1.35;
+  }
+  .roomy .item { grid-template-columns: 30px 1fr; padding: 9px 8px; font-size: 15px; }
+  .item[hidden] { display: none; }
+  .item:hover { color: var(--color-text); }
+  .item[aria-current='page'] { color: var(--color-accent); font-weight: 600; }
+  .num { font-variant-numeric: tabular-nums; opacity: .6; }
+  .sub { display: block; font-size: 12px; font-weight: 400; }
+  .empty { padding: 10px 8px; font-size: 14px; }
+</style>

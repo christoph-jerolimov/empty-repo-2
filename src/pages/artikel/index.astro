@@ -1,73 +1,51 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { ARTICLES, ARTICLE_TAGS } from '../../data/articles';
+import PageIntro from '../../components/PageIntro.astro';
+import { articleHref, dateShort, getArticles, getAuthor, searchText } from '../../lib/content';
+
+const articles = await Promise.all(
+  (await getArticles()).map(async (a) => ({ ...a, author: await getAuthor(a.data.author) })),
+);
+const tags = ['Alle', ...new Set(articles.map((a) => a.data.tag))];
 ---
 <Base title="Artikel" description="Hintergründe, Erklärstücke und Meinung zu JavaScript und dem ECMAScript-Standard." current="artikel">
-  <main class="container page-main">
-    <div class="page-intro">
-      <h6 class="kicker">Artikel</h6>
-      <h1>Längere Texte über die Sprache – und die Leute dahinter.</h1>
-      <p>Hintergründe, Erklärstücke, Meinung. Alles, was länger als zehn Minuten braucht und mehr will als ein Codebeispiel.</p>
-    </div>
+  <main class="container page-main" data-filter>
+    <PageIntro
+      kicker="Artikel"
+      title="Längere Texte über die Sprache – und die Leute dahinter."
+      lead="Hintergründe, Erklärstücke, Meinung. Alles, was länger als zehn Minuten braucht und mehr will als ein Codebeispiel."
+    />
 
     <div class="filters">
-      <input class="input" type="search" placeholder="Artikel durchsuchen" aria-label="Artikel durchsuchen" data-article-search />
+      <input class="input" type="search" placeholder="Artikel durchsuchen" aria-label="Artikel durchsuchen" data-filter-input />
       <div class="tags" role="group" aria-label="Nach Thema filtern">
-        {ARTICLE_TAGS.map((t, i) => (
-          <button type="button" class="tag filter-tag" data-tag={t} aria-pressed={i === 0 ? 'true' : 'false'}>{t}</button>
+        {tags.map((t, i) => (
+          <button type="button" class="tag filter-tag" data-filter-tag={t} aria-pressed={i === 0 ? 'true' : 'false'}>{t}</button>
         ))}
       </div>
     </div>
 
     <div class="list">
-      {ARTICLES.map((a) => (
+      {articles.map((a) => (
         <a
-          href={`/artikel/${a.slug}/`}
+          href={articleHref(a.id)}
           class="es-link es-row item"
-          data-article
-          data-tag={a.tag}
-          data-search={(a.title + a.teaser + a.author).toLowerCase()}
+          data-filter-item
+          data-tag={a.data.tag}
+          data-search={searchText(a.data.title, a.data.teaser, a.author.data.name)}
         >
-          <div class="text-muted item-date">{a.date}<br />{a.min} Min.</div>
+          <div class="text-muted item-date">{dateShort(a.data.date)}<br />{a.data.minutes} Min.</div>
           <div>
-            <div class="item-meta"><span class="tag tag-accent">{a.tag}</span><span class="text-muted item-author">{a.author}</span></div>
-            <h3>{a.title}</h3>
-            <p>{a.teaser}</p>
+            <div class="item-meta"><span class="tag tag-accent">{a.data.tag}</span><span class="text-muted item-author">{a.author.data.name}</span></div>
+            <h3>{a.data.title}</h3>
+            <p>{a.data.teaser}</p>
           </div>
         </a>
       ))}
-      <p class="text-muted empty" data-empty hidden>Nichts gefunden. Vielleicht ein <a href="/tutorials/">Tutorial</a>?</p>
+      <p class="text-muted empty" data-filter-empty hidden>Nichts gefunden. Vielleicht ein <a href="/tutorials/">Tutorial</a>?</p>
     </div>
   </main>
 </Base>
-
-<script>
-  const search = document.querySelector<HTMLInputElement>('[data-article-search]')!;
-  const tags = [...document.querySelectorAll<HTMLButtonElement>('.filter-tag')];
-  const items = [...document.querySelectorAll<HTMLElement>('[data-article]')];
-  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
-  let tag = 'Alle';
-
-  function apply() {
-    const q = search.value.trim().toLowerCase();
-    let shown = 0;
-    for (const item of items) {
-      const hit = (tag === 'Alle' || item.dataset.tag === tag) && (!q || (item.dataset.search ?? '').includes(q));
-      item.hidden = !hit;
-      if (hit) shown++;
-    }
-    empty.hidden = shown > 0;
-    for (const t of tags) t.setAttribute('aria-pressed', String(t.dataset.tag === tag));
-  }
-
-  search.addEventListener('input', apply);
-  for (const t of tags) {
-    t.addEventListener('click', () => {
-      tag = t.dataset.tag ?? 'Alle';
-      apply();
-    });
-  }
-</script>
 
 <style>
   .filters { display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 20px; align-items: center; }

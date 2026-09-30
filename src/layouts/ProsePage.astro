@@ -1,0 +1,26 @@
+---
+// Layout for Markdown/MDX pages in src/pages: page intro from frontmatter, body as prose.
+import Base from './Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Prose from '../components/Prose.astro';
+import type { NavKey } from '../components/Header.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    kicker: string;
+    headline: string;
+    lead: string;
+    description?: string;
+    nav?: NavKey;
+  };
+}
+
+const { title, kicker, headline, lead, description, nav } = Astro.props.frontmatter;
+---
+<Base title={title} description={description} current={nav}>
+  <main class="container page-main">
+    <PageIntro kicker={kicker} title={headline} lead={lead} size="large" />
+    <Prose variant="page"><slot /></Prose>
+  </main>
+</Base>

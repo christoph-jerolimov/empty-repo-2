@@ -1,12 +1,16 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import StandardView from '../../../components/StandardView.astro';
-import { EDITIONS, chaptersFor } from '../../../data/standard';
+import { getChapters, getEditions } from '../../../lib/content';
 
-export const getStaticPaths = (() =>
-  EDITIONS.flatMap((e) =>
-    chaptersFor(e.id).map((_, i) => ({ params: { ausgabe: e.id, kapitel: String(i + 1) } })),
-  )) satisfies GetStaticPaths;
+export const getStaticPaths = (async () => {
+  const paths = [];
+  for (const e of await getEditions()) {
+    const chapters = await getChapters(e.id);
+    paths.push(...chapters.map((_, i) => ({ params: { ausgabe: e.id, kapitel: String(i + 1) } })));
+  }
+  return paths;
+}) satisfies GetStaticPaths;
 
 const { ausgabe, kapitel } = Astro.params;
 ---

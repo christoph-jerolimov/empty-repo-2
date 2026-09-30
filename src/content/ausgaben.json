@@ -1,0 +1,44 @@
+[
+  {
+    "id": "es5",
+    "label": "ES5",
+    "meta": "5.1. Ausgabe · Juni 2011",
+    "highlights": "Strict Mode, JSON, Array-Methoden wie map und forEach, Getter und Setter, Object.defineProperty.",
+    "order": 0
+  },
+  {
+    "id": "es2015",
+    "label": "ES2015",
+    "meta": "6. Ausgabe · Juni 2015",
+    "highlights": "let und const, Klassen, Module, Promises, Arrow Functions, Template Literals, Destructuring, Map und Set, Symbole, Generatoren.",
+    "order": 1
+  },
+  {
+    "id": "es2020",
+    "label": "ES2020",
+    "meta": "11. Ausgabe · Juni 2020",
+    "highlights": "Optional Chaining ?., Nullish Coalescing ??, BigInt, dynamisches import(), Promise.allSettled, globalThis, String.prototype.matchAll.",
+    "order": 2
+  },
+  {
+    "id": "es2023",
+    "label": "ES2023",
+    "meta": "14. Ausgabe · Juni 2023",
+    "highlights": "findLast und findLastIndex, toSorted, toReversed, toSpliced und with, Hashbang-Grammatik, Symbole als WeakMap-Schlüssel.",
+    "order": 3
+  },
+  {
+    "id": "es2025",
+    "label": "ES2025",
+    "meta": "16. Ausgabe · Juni 2025",
+    "highlights": "Iterator-Helfer, neue Set-Methoden, Import-Attribute und JSON-Module, RegExp-Modifier und Duplicate Named Groups, Promise.try, Float16Array.",
+    "order": 4
+  },
+  {
+    "id": "es2026",
+    "label": "ES2026 (Entwurf)",
+    "meta": "17. Ausgabe · Entwurf",
+    "highlights": "Array.fromAsync, Error.isError, Math.sumPrecise, Base64- und Hex-Methoden auf Uint8Array, Explicit Resource Management (using).",
+    "order": 5
+  }
+]

@@ -1,0 +1,23 @@
+---
+// Kicker, linked headline, text and meta line (home page teasers).
+interface Props {
+  kicker: string;
+  title: string;
+  href: string;
+  meta: string;
+}
+
+const { kicker, title, href, meta } = Astro.props;
+---
+<div>
+  <h6 class="kicker">{kicker}</h6>
+  <h3><a href={href} class="es-link">{title}</a></h3>
+  <p><slot /></p>
+  <span class="text-muted meta">{meta}</span>
+</div>
+
+<style>
+  h3 { font-size: 24px; }
+  p { font-size: 15px; line-height: 1.55; }
+  .meta { font-size: 13px; }
+</style>

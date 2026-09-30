@@ -1,7 +1,27 @@
 ---
 import Base from '../layouts/Base.astro';
 import LiveEditor from '../components/LiveEditor.astro';
-import { LEARN_CODE, LEARNING_PATH } from '../data/home';
+import Teaser from '../components/Teaser.astro';
+import { getEntry } from 'astro:content';
+import { dateDayMonth, getEditions, getTutorials, tutorialHref, articleHref, postHref } from '../lib/content';
+
+const LEARN_CODE = `// Ändere etwas und drück „Ausführen“
+const sprachen = ["JavaScript", "ECMAScript", "JScript"];
+
+for (const s of sprachen) {
+  console.log(\`\${s} hat \${s.length} Zeichen\`);
+}
+
+console.log(typeof null, "– ein Fehler aus 1995, der bleibt");`;
+
+const path = (await getTutorials())
+  .filter((t) => t.data.pathStep)
+  .sort((a, b) => a.data.pathStep! - b.data.pathStep!);
+// The teaser copy below is written for these two entries.
+const article = (await getEntry('artikel', 'iterator-helfer'))!;
+const post = (await getEntry('blog', 'live-editor'))!;
+const editions = await getEditions();
+const newest = editions.at(-1)!;
 ---
 <Base headerSearch>
   <main class="container home">
@@ -11,7 +31,7 @@ import { LEARN_CODE, LEARNING_PATH } from '../data/home';
         <h1>Lies den Standard. Führ ihn aus. Versteh ihn.</h1>
         <p class="hero-lead">Du kennst JavaScript aus der Praxis – hier lernst du, warum es sich so verhält. Jedes Beispiel auf dieser Seite läuft live. Fang rechts an.</p>
         <div class="hero-actions">
-          <a href={`/tutorials/${LEARNING_PATH[0].slug}/`} class="btn btn-primary">Mit dem ersten Tutorial starten</a>
+          <a href={tutorialHref(path[0].id)} class="btn btn-primary">Mit dem ersten Tutorial starten</a>
           <a href="/standard/" class="btn btn-secondary">Direkt zum Standard</a>
         </div>
       </div>
@@ -22,36 +42,27 @@ import { LEARN_CODE, LEARNING_PATH } from '../data/home';
       <h6 class="kicker">Dein Lernpfad</h6>
       <h2>Vier Tutorials, dann liest du den Standard selbst.</h2>
       <div class="path-grid">
-        {LEARNING_PATH.map((s) => (
-          <a href={`/tutorials/${s.slug}/`} class="es-link path-step">
-            <span class="path-n">{s.n}</span>
-            <span class="path-title">{s.title}</span>
-            <span class="path-text">{s.text}</span>
-            <span class="text-muted path-meta">{s.meta}</span>
+        {path.map((t) => (
+          <a href={tutorialHref(t.id)} class="es-link path-step">
+            <span class="path-n">{t.data.pathStep}</span>
+            <span class="path-title">{t.data.title}</span>
+            <span class="path-text">{t.data.pathText ?? t.data.intro}</span>
+            <span class="text-muted path-meta">{t.data.level} · {t.data.minutes} Min.</span>
           </a>
         ))}
       </div>
     </section>
 
     <section class="teasers">
-      <div>
-        <h6 class="kicker">Dann weiter mit</h6>
-        <h3><a href="/artikel/iterator-helfer/" class="es-link">Iterator-Helfer: Endlich lazy, endlich lesbar</a></h3>
-        <p>Ein Artikel für den Moment, in dem Array-Methoden nicht mehr reichen.</p>
-        <span class="text-muted meta">Artikel · 14 Min.</span>
-      </div>
-      <div>
-        <h6 class="kicker">Neu im Standard</h6>
-        <h3><a href="/standard/es2026/1/" class="es-link">ES2026 (Entwurf): Was sich ändert</a></h3>
-        <p>Array.fromAsync, Error.isError, Math.sumPrecise, Base64 auf Uint8Array – kurz erklärt, direkt ausführbar.</p>
-        <span class="text-muted meta">Kapitelübersicht · 6 Ausgaben</span>
-      </div>
-      <div>
-        <h6 class="kicker">Aus dem Blog</h6>
-        <h3><a href="/blog/#live-editor" class="es-link">Der Live-Editor ist da – überall</a></h3>
-        <p>Warum jetzt jedes Beispiel auf der Seite läuft – und was das mit dem Konsolen-Panel rechts zu tun hat.</p>
-        <span class="text-muted meta">Blog · 24. Sept.</span>
-      </div>
+      <Teaser kicker="Dann weiter mit" title={article.data.title} href={articleHref(article.id)} meta={`Artikel · ${article.data.minutes} Min.`}>
+        Ein Artikel für den Moment, in dem Array-Methoden nicht mehr reichen.
+      </Teaser>
+      <Teaser kicker="Neu im Standard" title={`${newest.data.label}: Was sich ändert`} href={`/standard/${newest.id}/1/`} meta={`Kapitelübersicht · ${editions.length} Ausgaben`}>
+        Array.fromAsync, Error.isError, Math.sumPrecise, Base64 auf Uint8Array – kurz erklärt, direkt ausführbar.
+      </Teaser>
+      <Teaser kicker="Aus dem Blog" title={post.data.title} href={postHref(post.id)} meta={`Blog · ${dateDayMonth(post.data.date)}`}>
+        Warum jetzt jedes Beispiel auf der Seite läuft – und was das mit dem Konsolen-Panel rechts zu tun hat.
+      </Teaser>
     </section>
   </main>
 </Base>
@@ -82,7 +93,4 @@ import { LEARN_CODE, LEARNING_PATH } from '../data/home';
     margin-top: 80px; display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 50px;
   }
-  .teasers h3 { font-size: 24px; }
-  .teasers p { font-size: 15px; line-height: 1.55; }
-  .teasers .meta { font-size: 13px; }
 </style>
