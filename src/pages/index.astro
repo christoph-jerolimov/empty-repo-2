@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import LiveEditor from '../components/LiveEditor.astro';
+import { LEARN_CODE, LEARNING_PATH } from '../data/home';
+---
+<Base headerSearch>
+  <main class="container home">
+    <div class="hero">
+      <div>
+        <h6 class="kicker hero-kicker">Für alle, die es genau wissen wollen</h6>
+        <h1>Lies den Standard. Führ ihn aus. Versteh ihn.</h1>
+        <p class="hero-lead">Du kennst JavaScript aus der Praxis – hier lernst du, warum es sich so verhält. Jedes Beispiel auf dieser Seite läuft live. Fang rechts an.</p>
+        <div class="hero-actions">
+          <a href={`/tutorials/${LEARNING_PATH[0].slug}/`} class="btn btn-primary">Mit dem ersten Tutorial starten</a>
+          <a href="/standard/" class="btn btn-secondary">Direkt zum Standard</a>
+        </div>
+      </div>
+      <LiveEditor title="Dein erster Versuch" code={LEARN_CODE} />
+    </div>
+
+    <section class="path">
+      <h6 class="kicker">Dein Lernpfad</h6>
+      <h2>Vier Tutorials, dann liest du den Standard selbst.</h2>
+      <div class="path-grid">
+        {LEARNING_PATH.map((s) => (
+          <a href={`/tutorials/${s.slug}/`} class="es-link path-step">
+            <span class="path-n">{s.n}</span>
+            <span class="path-title">{s.title}</span>
+            <span class="path-text">{s.text}</span>
+            <span class="text-muted path-meta">{s.meta}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="teasers">
+      <div>
+        <h6 class="kicker">Dann weiter mit</h6>
+        <h3><a href="/artikel/iterator-helfer/" class="es-link">Iterator-Helfer: Endlich lazy, endlich lesbar</a></h3>
+        <p>Ein Artikel für den Moment, in dem Array-Methoden nicht mehr reichen.</p>
+        <span class="text-muted meta">Artikel · 14 Min.</span>
+      </div>
+      <div>
+        <h6 class="kicker">Neu im Standard</h6>
+        <h3><a href="/standard/es2026/1/" class="es-link">ES2026 (Entwurf): Was sich ändert</a></h3>
+        <p>Array.fromAsync, Error.isError, Math.sumPrecise, Base64 auf Uint8Array – kurz erklärt, direkt ausführbar.</p>
+        <span class="text-muted meta">Kapitelübersicht · 6 Ausgaben</span>
+      </div>
+      <div>
+        <h6 class="kicker">Aus dem Blog</h6>
+        <h3><a href="/blog/#live-editor" class="es-link">Der Live-Editor ist da – überall</a></h3>
+        <p>Warum jetzt jedes Beispiel auf der Seite läuft – und was das mit dem Konsolen-Panel rechts zu tun hat.</p>
+        <span class="text-muted meta">Blog · 24. Sept.</span>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .home { padding-top: 40px; }
+  .hero {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 50px; align-items: center;
+  }
+  .hero-kicker { margin-bottom: 10px; }
+  .hero h1 { font-size: clamp(36px, 6.5vw, 50px); line-height: 1.08; margin-bottom: 20px; text-wrap: balance; }
+  .hero-lead { font-size: 18px; line-height: 1.5; }
+  .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+  .hero-actions .btn { min-height: 44px; }
+  .hero-actions .btn-primary { padding-inline: 20px; }
+
+  .path { margin-top: 80px; }
+  .path h2 { font-size: clamp(26px, 4.2vw, 32px); margin-bottom: 25px; }
+  .path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 30px; }
+  .path-step { display: flex; flex-direction: column; gap: 8px; }
+  .path-n { font-size: 44px; font-weight: 600; line-height: 1; color: var(--color-accent); font-variant-numeric: tabular-nums; }
+  .path-title { font-weight: 600; font-size: 20px; line-height: 1.2; }
+  .path-text { font-size: 14px; line-height: 1.5; opacity: .85; }
+  .path-meta { font-size: 12px; }
+
+  .teasers {
+    margin-top: 80px; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 50px;
+  }
+  .teasers h3 { font-size: 24px; }
+  .teasers p { font-size: 15px; line-height: 1.55; }
+  .teasers .meta { font-size: 13px; }
+</style>

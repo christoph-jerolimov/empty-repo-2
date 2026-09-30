@@ -1,0 +1,10 @@
+---
+import type { GetStaticPaths } from 'astro';
+import TutorialView from '../../components/TutorialView.astro';
+import { TUTORIALS } from '../../data/tutorials';
+
+export const getStaticPaths = (() => TUTORIALS.map((t) => ({ params: { slug: t.slug } }))) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+---
+<TutorialView slug={slug} />

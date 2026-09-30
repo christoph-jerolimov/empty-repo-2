@@ -1,25 +1,31 @@
-# CODING AGENTS: READ THIS FIRST
+# EcmaScript.de
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+The German-language, unofficial companion site for the ECMAScript standard (ECMA-262): the spec with commentary, articles, short tutorials and a blog. Every code example runs live in the browser.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+Built with [Astro](https://astro.build) and TypeScript as a fully static site.
 
-## What you should do — IMPORTANT
+```sh
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # static output in dist/
+npm run check    # type-check
+```
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+## Structure
 
-**Read `project/Startseite.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+- `src/pages/` – routes: `/`, `/standard/[ausgabe]/[kapitel]/`, `/artikel/`, `/artikel/[slug]/`, `/tutorials/[slug]/`, `/blog/`, `/ueber/`
+- `src/components/` – header, footer, `LiveEditor`, and the shared Standard, Tutorial and Article views
+- `src/data/` – all content (editions, chapters, tutorials, articles, posts)
+- `src/scripts/` – client code: theme toggle, and the `<es-live-editor>` custom element
+- `src/styles/broadsheet.css` – the Broadsheet design system (tokens and components); `site.css` holds the site's overrides and dark theme
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+## Design source
 
-## About the design files
+`project/` and `chats/` hold the Claude Design handoff bundle this site was built from (HTML prototypes and the design conversation). The home page implements variant **1c "Lernpfad"**.
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+## Open placeholders
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
-
-## Bundle contents
-
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `EcmaScript.de Website Design` project files (HTML prototypes, assets, components)
+- GitHub, RSS and donation links (`src/data/site.ts`)
+- Newsletter form (there's no backend yet, so submitting does nothing)
+- Impressum and privacy policy text (`src/pages/ueber.astro`)
+- Full article text for every article except "Iterator-Helfer"

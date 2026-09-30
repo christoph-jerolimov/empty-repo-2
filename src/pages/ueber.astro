@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import { LINKS } from '../data/site';
+
+const TEAM = [
+  { initials: 'LH', name: 'Lena Hartmann', bio: 'Kapitel 22–27, Artikel über Vorschläge. Compiler-Bau im Studium, seitdem fasziniert von Grammatiken.', bg: 'var(--color-accent-200)', fg: 'var(--color-accent-800)' },
+  { initials: 'JW', name: 'Jonas Weber', bio: 'Kapitel 1–12, Technik der Seite, Live-Editor. Unterrichtet Web-Entwicklung an einer Berufsschule.', bg: 'var(--color-accent-2-200)', fg: 'var(--color-accent-2-800)' },
+  { initials: 'MS', name: 'Mira Sattler', bio: 'Kapitel 13–21, Tutorials, Lektorat. Frontend-Entwicklerin, findet Semikolons wichtig.', bg: 'var(--color-neutral-300)', fg: 'var(--color-neutral-900)' },
+];
+---
+<Base title="Über uns & Impressum" description="Wer hinter EcmaScript.de steckt, wie du mitmachen kannst – und das Impressum." current="ueber">
+  <main class="container page-main">
+    <div class="intro">
+      <h6 class="kicker">Über EcmaScript.de</h6>
+      <h1>Der Standard, auf Deutsch, von Leuten, die ihn gern lesen.</h1>
+      <p>ECMA-262 ist das genaueste Dokument, das es über JavaScript gibt – und eines der am wenigsten gelesenen. Wir übersetzen es, kommentieren es und hängen Beispiele dran, die du direkt ausführen kannst. Für Einsteiger, die wissen wollen, warum; für Profis, die es genau wissen wollen; für alle, die unterrichten.</p>
+    </div>
+
+    <section class="block narrow">
+      <h2>Nicht offiziell. Absichtlich.</h2>
+      <p>EcmaScript.de gehört nicht zu Ecma International und nicht zu TC39. Niemand von uns sitzt im Komitee. Das ist kein Mangel, sondern der Punkt: Wir dürfen erklären, meinen und vereinfachen – das darf der Standard nicht. Wo wir vom Original abweichen, sagen wir es. Die verbindliche Fassung findest du immer unter <a href={LINKS.spec}>tc39.es/ecma262</a>.</p>
+    </section>
+
+    <section class="block">
+      <h2 class="team-h">Wer hier schreibt</h2>
+      <div class="team">
+        {TEAM.map((m) => (
+          <div class="member">
+            <span class="avatar" style={`background:${m.bg};color:${m.fg}`}>{m.initials}</span>
+            <div>
+              <div class="member-name">{m.name}</div>
+              <p>{m.bio}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="block narrow">
+      <h2>Mitmachen</h2>
+      <p>Alles – Übersetzungen, Beispiele, die Seite selbst – liegt auf <a href={LINKS.github}>GitHub</a>. Tippfehler korrigierst du direkt im Browser; für ein ganzes Kapitel melde dich vorher kurz im Issue-Tracker, damit wir nicht doppelt arbeiten. Wer lieber Geld als Zeit gibt: <a href={LINKS.donate}>Spenden</a> decken Domain und Server, mehr nicht.</p>
+    </section>
+
+    <section class="legal narrow" id="impressum">
+      <h6 class="kicker">Impressum</h6>
+      <p class="placeholder">Angaben gemäß § 5 DDG<br />[Name des Betreibers]<br />[Straße und Hausnummer]<br />[PLZ und Ort]<br />E-Mail: [kontakt@ecmascript.de]<br /><br />Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV: [Name]</p>
+      <h6 class="kicker privacy-h" id="datenschutz">Datenschutz</h6>
+      <p>Diese Seite setzt keine Tracking-Cookies. Der Live-Editor führt Code ausschließlich in deinem Browser aus; nichts wird übertragen. Für den Newsletter speichern wir deine E-Mail-Adresse bis zur Abmeldung. [Vollständige Datenschutzerklärung ergänzen.]</p>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .intro { max-width: 720px; }
+  .intro h6 { margin-bottom: 10px; }
+  .intro h1 { font-size: clamp(34px, 6.25vw, 48px); margin-bottom: 20px; text-wrap: balance; }
+  .intro p { font-size: 19px; line-height: 1.55; }
+  .block { margin-top: 60px; }
+  .narrow { max-width: 720px; }
+  .block h2 { font-size: 30px; }
+  .block p { font-size: 17px; line-height: 1.6; }
+  .team-h { margin-bottom: 25px; }
+  .team { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 40px; max-width: 900px; }
+  .member { display: flex; gap: 15px; align-items: flex-start; }
+  .member .avatar { width: 52px; height: 52px; font-size: 17px; }
+  .member-name { font-weight: 600; font-size: 18px; }
+  .team .member p { font-size: 14px; line-height: 1.55; margin: 4px 0 0; }
+  .legal { margin-top: 80px; scroll-margin-top: 20px; }
+  .legal p { font-size: 15px; line-height: 1.7; }
+  .legal .placeholder { margin: 0; font-style: italic; color: color-mix(in srgb, var(--color-text) 65%, transparent); }
+  .privacy-h { margin-top: 40px; }
+</style>

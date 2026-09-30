@@ -1,0 +1,20 @@
+---
+interface Props {
+  href: string;
+  tag: string;
+  title: string;
+  min: number;
+}
+
+const { href, tag, title, min } = Astro.props;
+---
+<a href={href} class="es-link more-link">
+  <span class="tag tag-accent">{tag}</span>
+  <h4>{title}</h4>
+  <p class="text-muted">{min} Min.</p>
+</a>
+
+<style>
+  h4 { font-size: 20px; margin: 8px 0; }
+  p { font-size: 14px; margin: 0; }
+</style>

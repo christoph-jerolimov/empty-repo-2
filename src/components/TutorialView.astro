@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import LiveEditor from './LiveEditor.astro';
+import { TUTORIALS } from '../data/tutorials';
+import { chapterHref, DEFAULT_EDITION } from '../data/standard';
+
+interface Props {
+  slug: string;
+}
+
+const i = TUTORIALS.findIndex((t) => t.slug === Astro.props.slug);
+const tut = TUTORIALS[i];
+const prev = TUTORIALS[i - 1];
+const next = TUTORIALS[i + 1];
+const href = (slug: string) => `/tutorials/${slug}/`;
+---
+<Base title={tut.title} description={tut.intro} current="tutorials">
+  <main class="container page-main">
+    <div class="page-intro">
+      <h6 class="kicker">Tutorials</h6>
+      <h1>Kurz, praktisch, zum Mitmachen.</h1>
+      <p>Jedes Tutorial ist in 10 bis 15 Minuten durch. Der Code läuft direkt hier auf der Seite – ändere ihn, mach ihn kaputt, repariere ihn.</p>
+    </div>
+
+    <div class="split">
+      <aside class="split-aside">
+        <input class="input tut-search" type="search" placeholder="Tutorial suchen" aria-label="Tutorial suchen" data-tut-search />
+        <nav class="side-list" aria-label="Tutorials">
+          {TUTORIALS.map((t, k) => (
+            <a
+              href={href(t.slug)}
+              class="es-row side-item tut-item"
+              aria-current={k === i ? 'page' : undefined}
+              data-search={(t.title + t.intro).toLowerCase()}
+            >
+              <span class="num">{k + 1}</span>
+              <span>{t.title}<span class="text-muted tut-meta">{t.level} · {t.min} Min.</span></span>
+            </a>
+          ))}
+        </nav>
+      </aside>
+
+      <article class="split-main">
+        <div class="head-meta"><span class="tag tag-accent">{tut.level}</span><span class="text-muted">{tut.min} Minuten · {tut.since}</span></div>
+        <h2 class="title">{tut.title}</h2>
+        <p class="intro">{tut.intro}</p>
+        {tut.steps.map((s, k) => (
+          <section class="step">
+            <h3>{k + 1}. {s.title}</h3>
+            <p>{s.text}</p>
+            <LiveEditor title={s.label} code={s.code} />
+          </section>
+        ))}
+        <section class="task">
+          <h4>Aufgabe</h4>
+          <p>{tut.task}</p>
+          <p class="text-muted spec">Im Standard: <a href={chapterHref(DEFAULT_EDITION, tut.specChapter)}>{tut.spec}</a></p>
+        </section>
+        <div class="pager">
+          {prev
+            ? <a class="btn btn-ghost" href={href(prev.slug)}>← Vorheriges</a>
+            : <span class="btn btn-ghost" aria-disabled="true">← Vorheriges</span>}
+          {next
+            ? <a class="btn btn-ghost" href={href(next.slug)}>Nächstes Tutorial →</a>
+            : <span class="btn btn-ghost" aria-disabled="true">Nächstes Tutorial →</span>}
+        </div>
+      </article>
+    </div>
+  </main>
+</Base>
+
+<script>
+  const input = document.querySelector<HTMLInputElement>('[data-tut-search]');
+  const items = [...document.querySelectorAll<HTMLElement>('.tut-item')];
+  input?.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    for (const item of items) item.hidden = !!q && !(item.dataset.search ?? '').includes(q);
+  });
+</script>
+
+<style>
+  .tut-search { margin-bottom: 15px; }
+  .tut-item { grid-template-columns: 30px 1fr; padding: 9px 8px; font-size: 15px; }
+  .tut-item[hidden] { display: none; }
+  .tut-meta { display: block; font-size: 12px; font-weight: 400; }
+  .head-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; font-size: 13px; }
+  .title { font-size: clamp(28px, 4.7vw, 36px); margin-bottom: 15px; text-wrap: balance; }
+  .intro { font-size: 18px; line-height: 1.55; font-style: italic; }
+  .step { margin-top: 35px; }
+  .step h3 { font-size: 24px; margin-bottom: 10px; }
+  .step p, .task p { font-size: 16px; line-height: 1.6; }
+  .task { margin-top: 40px; padding-top: 20px; }
+  .task p.spec { font-size: 14px; }
+</style>

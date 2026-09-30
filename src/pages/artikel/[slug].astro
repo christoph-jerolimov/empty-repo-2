@@ -1,0 +1,28 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ArticleLayout from '../../components/ArticleLayout.astro';
+import MoreLink from '../../components/MoreLink.astro';
+import { ARTICLES } from '../../data/articles';
+
+// Only "iterator-helfer" has a written body (its own page); the others show their teaser for now.
+export const getStaticPaths = (() =>
+  ARTICLES.filter((a) => a.slug !== 'iterator-helfer').map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }))) satisfies GetStaticPaths;
+
+const { article } = Astro.props;
+const others = ARTICLES.filter((a) => a.slug !== article.slug).slice(0, 3);
+---
+<ArticleLayout article={article}>
+  <p class="lead">{article.teaser}</p>
+  <p class="text-muted pending">Der vollständige Artikel ist noch in Arbeit.</p>
+
+  <Fragment slot="more">
+    {others.map((a) => <MoreLink href={`/artikel/${a.slug}/`} tag={a.tag} title={a.title} min={a.min} />)}
+  </Fragment>
+</ArticleLayout>
+
+<style>
+  .pending { font-size: 15px; }
+</style>
