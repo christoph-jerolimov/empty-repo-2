@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css"></helmet>
+<header style="display:flex;align-items:center;gap:30px;padding:20px 40px;max-width:1240px;margin:0 auto;flex-wrap:wrap">
+  <a href="Startseite.dc.html" class="es-link" style="display:flex;align-items:center;gap:10px;margin-right:auto">
+    <span style="width:30px;height:30px;border:2px solid currentColor;border-radius:var(--radius-lg);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">ES</span>
+    <span style="font-weight:600;font-size:19px;letter-spacing:-.01em">EcmaScript<span style="color:var(--color-accent)">.de</span></span>
+  </a>
+  <nav class="es-nav" style="display:flex;gap:20px;flex-wrap:wrap">
+    <a href="Standard.dc.html">Standard</a><a href="Artikel.dc.html">Artikel</a><a href="Tutorials.dc.html">Tutorials</a><a href="Blog.dc.html">Blog</a><a href="Ueber.dc.html" aria-current="page">Über</a>
+  </nav>
+  <button onClick="{{ toggleTheme }}" class="btn btn-secondary" style="padding:6px 12px;font-size:13px">{{ themeLabel }}</button>
+</header>
+
+<main style="max-width:1240px;margin:0 auto;padding:30px 40px 0">
+  <div style="max-width:720px">
+    <h6 style="color:var(--color-accent);margin-bottom:10px">Über EcmaScript.de</h6>
+    <h1 style="font-size:48px;margin-bottom:20px;text-wrap:balance">Der Standard, auf Deutsch, von Leuten, die ihn gern lesen.</h1>
+    <p style="font-size:19px;line-height:1.55">ECMA-262 ist das genaueste Dokument, das es über JavaScript gibt – und eines der am wenigsten gelesenen. Wir übersetzen es, kommentieren es und hängen Beispiele dran, die du direkt ausführen kannst. Für Einsteiger, die wissen wollen, warum; für Profis, die es genau wissen wollen; für alle, die unterrichten.</p>
+  </div>
+
+  <section style="margin-top:60px;max-width:720px">
+    <h2 style="font-size:30px">Nicht offiziell. Absichtlich.</h2>
+    <p style="font-size:17px;line-height:1.6">EcmaScript.de gehört nicht zu Ecma International und nicht zu TC39. Niemand von uns sitzt im Komitee. Das ist kein Mangel, sondern der Punkt: Wir dürfen erklären, meinen und vereinfachen – das darf der Standard nicht. Wo wir vom Original abweichen, sagen wir es. Die verbindliche Fassung findest du immer unter <a href="#">tc39.es/ecma262</a>.</p>
+  </section>
+
+  <section style="margin-top:60px">
+    <h2 style="font-size:30px;margin-bottom:25px">Wer hier schreibt</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:40px;max-width:900px">
+      <div style="display:flex;gap:15px;align-items:flex-start"><span style="width:52px;height:52px;flex:none;border-radius:50%;background:var(--color-accent-200);color:var(--color-accent-800);display:grid;place-items:center;font-weight:600;font-size:17px">LH</span><div><div style="font-weight:600;font-size:18px">Lena Hartmann</div><p style="font-size:14px;line-height:1.55;margin:4px 0 0">Kapitel 22–27, Artikel über Vorschläge. Compiler-Bau im Studium, seitdem fasziniert von Grammatiken.</p></div></div>
+      <div style="display:flex;gap:15px;align-items:flex-start"><span style="width:52px;height:52px;flex:none;border-radius:50%;background:var(--color-accent-2-200);color:var(--color-accent-2-800);display:grid;place-items:center;font-weight:600;font-size:17px">JW</span><div><div style="font-weight:600;font-size:18px">Jonas Weber</div><p style="font-size:14px;line-height:1.55;margin:4px 0 0">Kapitel 1–12, Technik der Seite, Live-Editor. Unterrichtet Web-Entwicklung an einer Berufsschule.</p></div></div>
+      <div style="display:flex;gap:15px;align-items:flex-start"><span style="width:52px;height:52px;flex:none;border-radius:50%;background:var(--color-neutral-300);color:var(--color-neutral-900);display:grid;place-items:center;font-weight:600;font-size:17px">MS</span><div><div style="font-weight:600;font-size:18px">Mira Sattler</div><p style="font-size:14px;line-height:1.55;margin:4px 0 0">Kapitel 13–21, Tutorials, Lektorat. Frontend-Entwicklerin, findet Semikolons wichtig.</p></div></div>
+    </div>
+  </section>
+
+  <section style="margin-top:60px;max-width:720px">
+    <h2 style="font-size:30px">Mitmachen</h2>
+    <p style="font-size:17px;line-height:1.6">Alles – Übersetzungen, Beispiele, die Seite selbst – liegt auf <a href="#">GitHub</a>. Tippfehler korrigierst du direkt im Browser; für ein ganzes Kapitel melde dich vorher kurz im Issue-Tracker, damit wir nicht doppelt arbeiten. Wer lieber Geld als Zeit gibt: <a href="#">Spenden</a> decken Domain und Server, mehr nicht.</p>
+  </section>
+
+  <section style="margin-top:80px;max-width:720px">
+    <h6 style="color:var(--color-accent)">Impressum</h6>
+    <p style="font-size:15px;line-height:1.7;margin:0;font-style:italic;color:color-mix(in srgb,var(--color-text) 65%,transparent)">Angaben gemäß § 5 DDG<br>[Name des Betreibers]<br>[Straße und Hausnummer]<br>[PLZ und Ort]<br>E-Mail: [kontakt@ecmascript.de]<br><br>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV: [Name]</p>
+    <h6 style="color:var(--color-accent);margin-top:40px">Datenschutz</h6>
+    <p style="font-size:15px;line-height:1.7">Diese Seite setzt keine Tracking-Cookies. Der Live-Editor führt Code ausschließlich in deinem Browser aus; nichts wird übertragen. Für den Newsletter speichern wir deine E-Mail-Adresse bis zur Abmeldung. [Vollständige Datenschutzerklärung ergänzen.]</p>
+  </section>
+</main>
+
+<footer style="max-width:1240px;margin:80px auto 0;padding:40px 40px 50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;font-size:14px">
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Newsletter</div><p class="text-muted" style="font-size:13px">Einmal im Monat: neue Artikel, Tutorials und was TC39 beschlossen hat.</p><form style="display:flex;gap:10px" onSubmit="{{ prevent }}"><input class="input" type="email" placeholder="du@beispiel.de" aria-label="E-Mail"><button class="btn btn-primary" type="submit">Abonnieren</button></form></div>
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Mitmachen</div><div style="display:flex;flex-direction:column;gap:6px"><a href="#">GitHub – Quelltext &amp; Übersetzungen</a><a href="#">RSS-Feed</a><a href="#">Spenden – Serverkosten decken</a></div></div>
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Hinweis</div><p class="text-muted" style="font-size:13px">EcmaScript.de ist ein unabhängiges Community-Projekt – nicht Ecma International, nicht TC39. Die offizielle Spezifikation findest du unter tc39.es/ecma262.</p><a href="Ueber.dc.html">Impressum</a></div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { theme: 'light' };
+  componentDidMount() { const t = localStorage.getItem('esde-theme') || 'light'; document.documentElement.dataset.theme = t; this.setState({ theme: t }); }
+  toggleTheme = () => { const t = this.state.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('esde-theme', t); document.documentElement.dataset.theme = t; this.setState({ theme: t }); };
+  renderVals() { return { themeLabel: this.state.theme === 'dark' ? 'Hell' : 'Dunkel', toggleTheme: this.toggleTheme, prevent: e => e.preventDefault() }; }
+}
+</script>
+</body>
+</html>

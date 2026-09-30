@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css"></helmet>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));background:var(--color-surface);border-radius:var(--radius-lg);overflow:hidden;font-size:13px;box-shadow:var(--shadow-sm)">
+  <div style="display:flex;flex-direction:column;min-width:0">
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 8px 8px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-700)">
+      <span>{{ title }}</span>
+      <button onClick="{{ run }}" class="btn btn-primary" style="margin-left:auto;padding:4px 12px;font-size:12px">Ausführen ▸</button>
+    </div>
+    <textarea class="es-code" value="{{ code }}" onChange="{{ onChange }}" onKeyDown="{{ onKey }}" spellCheck="{{ false }}" style="flex:1;min-height:150px;margin:0;padding:12px 14px;border:0;resize:vertical;background:transparent;color:var(--color-text);font-size:13px;line-height:1.6;outline:none;tab-size:2;caret-color:var(--color-accent)"></textarea>
+  </div>
+  <div style="border-left:1px solid var(--color-divider);display:flex;flex-direction:column;min-width:0">
+    <div style="padding:8px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-600);display:flex;align-items:center;min-height:37px">Konsole</div>
+    <div class="es-code" style="padding:12px 14px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;flex:1">
+      <sc-for list="{{ lines }}" as="l" hint-placeholder-count="0"><div style="color:{{ l.color }}">{{ l.text }}</div></sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:760,&quot;height&quot;:220},&quot;title&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Beispiel&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;code&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;const zahlen = [1, 2, 3];\nconsole.log(zahlen.map(n =&gt; n * 2));&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { code: null, lines: [] };
+  componentDidMount() { this.run(); }
+  componentDidUpdate(prev) { if (prev.code !== this.props.code) this.setState({ code: null }, this.run); }
+  fmt = v => { if (typeof v === 'string') return v; if (typeof v === 'function') return String(v); try { return JSON.stringify(v, null, 1).replace(/\n\s*/g, ' '); } catch (e) { return String(v); } };
+  run = async () => {
+    const code = this.state.code ?? this.props.code ?? '';
+    const lines = [];
+    const log = color => (...a) => lines.push({ text: a.map(this.fmt).join(' '), color });
+    const con = { log: log('var(--color-text)'), info: log('var(--color-accent-700)'), warn: log('var(--color-accent-2-600)'), error: log('var(--color-accent-2-600)'), table: log('var(--color-text)') };
+    const AsyncFn = Object.getPrototypeOf(async function () {}).constructor;
+    try {
+      const r = await new AsyncFn('console', code)(con);
+      await new Promise(res => setTimeout(res, 60));
+      if (r !== undefined) lines.push({ text: '← ' + this.fmt(r), color: 'var(--color-accent-700)' });
+    } catch (e) { lines.push({ text: e.name + ': ' + e.message, color: 'var(--color-accent-2-600)' }); }
+    if (!lines.length) lines.push({ text: '(keine Ausgabe)', color: 'var(--color-neutral-600)' });
+    this.setState({ lines });
+  };
+  renderVals() {
+    return {
+      code: this.state.code ?? this.props.code ?? '',
+      title: this.props.title ?? 'Beispiel',
+      lines: this.state.lines,
+      run: this.run,
+      onChange: e => this.setState({ code: e.target.value }),
+      onKey: e => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') this.run(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

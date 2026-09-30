@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css"></helmet>
+<header style="display:flex;align-items:center;gap:30px;padding:20px 40px;max-width:1240px;margin:0 auto;flex-wrap:wrap">
+  <a href="Startseite.dc.html" class="es-link" style="display:flex;align-items:center;gap:10px;margin-right:auto">
+    <span style="width:30px;height:30px;border:2px solid currentColor;border-radius:var(--radius-lg);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">ES</span>
+    <span style="font-weight:600;font-size:19px;letter-spacing:-.01em">EcmaScript<span style="color:var(--color-accent)">.de</span></span>
+  </a>
+  <nav class="es-nav" style="display:flex;gap:20px;flex-wrap:wrap">
+    <a href="Standard.dc.html" aria-current="page">Standard</a><a href="Artikel.dc.html">Artikel</a><a href="Tutorials.dc.html">Tutorials</a><a href="Blog.dc.html">Blog</a><a href="Ueber.dc.html">Über</a>
+  </nav>
+  <button onClick="{{ toggleTheme }}" class="btn btn-secondary" style="padding:6px 12px;font-size:13px">{{ themeLabel }}</button>
+</header>
+
+<main style="max-width:1240px;margin:0 auto;padding:30px 40px 0">
+  <div style="max-width:720px">
+    <h6 style="color:var(--color-accent);margin-bottom:10px">ECMA-262 · Deutsche Ausgabe</h6>
+    <h1 style="font-size:48px;margin-bottom:15px;text-wrap:balance">Der Standard – übersetzt, kommentiert, klickbar.</h1>
+    <p style="font-size:18px;line-height:1.5;max-width:600px">Wähl eine Ausgabe, klick dich durch die Kapitel. Wo ein Beispiel dabei ist, kannst du es direkt im Browser ausführen und verändern.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:15px 30px;margin:30px 0 10px">
+    <div class="seg" role="radiogroup" aria-label="Ausgabe">
+      <sc-for list="{{ versions }}" as="v" hint-placeholder-count="6">
+        <label class="seg-opt" style="white-space:nowrap"><input type="radio" name="edition" checked="{{ v.checked }}" onChange="{{ v.select }}">{{ v.label }}</label>
+      </sc-for>
+    </div>
+    <div style="font-size:14px" class="text-muted">{{ edition.meta }}</div>
+  </div>
+  <p style="font-size:15px;max-width:720px"><span style="font-weight:600">Neu in dieser Ausgabe:</span> {{ edition.highlights }}</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:40px 60px;margin-top:40px;align-items:flex-start">
+    <aside style="flex:1 1 260px;max-width:340px;position:sticky;top:20px">
+      <input class="input" type="search" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Kapitel suchen – z. B. „Promise“" aria-label="Kapitel suchen" style="margin-bottom:15px">
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="12">
+          <button onClick="{{ c.select }}" class="es-row" aria-current="{{ c.current }}" style="display:grid;grid-template-columns:34px 1fr;gap:8px;text-align:left;padding:7px 8px;border:0;border-radius:var(--radius-md);background:transparent;color:{{ c.color }};font:inherit;font-size:14px;line-height:1.35;cursor:pointer;font-weight:{{ c.weight }}">
+            <span style="font-variant-numeric:tabular-nums;opacity:.6">{{ c.n }}</span><span>{{ c.de }}</span>
+          </button>
+        </sc-for>
+        <sc-if value="{{ noHits }}" hint-placeholder-val="{{ false }}"><div class="text-muted" style="padding:10px 8px;font-size:14px">Kein Kapitel passt zu „{{ query }}“.</div></sc-if>
+      </div>
+    </aside>
+
+    <article style="flex:3 1 480px;min-width:0;max-width:760px">
+      <h6 style="color:var(--color-accent);margin-bottom:8px">Kapitel {{ chapter.n }} · {{ chapter.en }}</h6>
+      <h2 style="font-size:36px;margin-bottom:20px;text-wrap:balance">{{ chapter.de }}</h2>
+      <sc-for list="{{ chapter.paras }}" as="p" hint-placeholder-count="2"><p style="font-size:17px;line-height:1.6">{{ p }}</p></sc-for>
+      <sc-if value="{{ chapter.hasSubs }}" hint-placeholder-val="{{ true }}">
+        <h4 style="margin-top:30px">Abschnitte</h4>
+        <ol style="margin:0 0 20px;padding-left:22px;font-size:15px;line-height:1.7;columns:2;column-gap:30px">
+          <sc-for list="{{ chapter.subs }}" as="s" hint-placeholder-count="4"><li>{{ s }}</li></sc-for>
+        </ol>
+      </sc-if>
+      <sc-if value="{{ chapter.hasExample }}" hint-placeholder-val="{{ true }}">
+        <h4 style="margin-top:30px">Ausprobieren</h4>
+        <p class="text-muted" style="font-size:13px">Ändere den Code und drück „Ausführen“ (oder ⌘/Strg + Enter).</p>
+        <dc-import name="LiveEditor" code="{{ chapter.exampleCode }}" title="{{ chapter.exampleTitle }}" hint-size="100%,220px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ chapter.draft }}" hint-placeholder-val="{{ false }}">
+        <p style="margin-top:30px;font-size:14px"><span class="tag tag-accent-2" style="margin-right:8px">Übersetzung in Arbeit</span>Dieses Kapitel ist noch nicht vollständig übersetzt. <a href="#">Hilf auf GitHub mit.</a></p>
+      </sc-if>
+      <div style="display:flex;justify-content:space-between;gap:20px;margin-top:50px;flex-wrap:wrap">
+        <button onClick="{{ prev }}" class="btn btn-ghost" disabled="{{ noPrev }}">← Vorheriges Kapitel</button>
+        <button onClick="{{ next }}" class="btn btn-ghost" disabled="{{ noNext }}">Nächstes Kapitel →</button>
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer style="max-width:1240px;margin:80px auto 0;padding:40px 40px 50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;font-size:14px">
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Newsletter</div><p class="text-muted" style="font-size:13px">Einmal im Monat: neue Artikel, Tutorials und was TC39 beschlossen hat.</p><form style="display:flex;gap:10px" onSubmit="{{ prevent }}"><input class="input" type="email" placeholder="du@beispiel.de" aria-label="E-Mail"><button class="btn btn-primary" type="submit">Abonnieren</button></form></div>
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Mitmachen</div><div style="display:flex;flex-direction:column;gap:6px"><a href="#">GitHub – Quelltext &amp; Übersetzungen</a><a href="#">RSS-Feed</a><a href="#">Spenden – Serverkosten decken</a></div></div>
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Hinweis</div><p class="text-muted" style="font-size:13px">EcmaScript.de ist ein unabhängiges Community-Projekt – nicht Ecma International, nicht TC39. Die offizielle Spezifikation findest du unter tc39.es/ecma262.</p><a href="Ueber.dc.html">Impressum</a></div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const VERSIONS = [
+  { id: 'es5', label: 'ES5', meta: '5.1. Ausgabe · Juni 2011', highlights: 'Strict Mode, JSON, Array-Methoden wie map und forEach, Getter und Setter, Object.defineProperty.' },
+  { id: 'es2015', label: 'ES2015', meta: '6. Ausgabe · Juni 2015', highlights: 'let und const, Klassen, Module, Promises, Arrow Functions, Template Literals, Destructuring, Map und Set, Symbole, Generatoren.' },
+  { id: 'es2020', label: 'ES2020', meta: '11. Ausgabe · Juni 2020', highlights: 'Optional Chaining ?., Nullish Coalescing ??, BigInt, dynamisches import(), Promise.allSettled, globalThis, String.prototype.matchAll.' },
+  { id: 'es2023', label: 'ES2023', meta: '14. Ausgabe · Juni 2023', highlights: 'findLast und findLastIndex, toSorted, toReversed, toSpliced und with, Hashbang-Grammatik, Symbole als WeakMap-Schlüssel.' },
+  { id: 'es2025', label: 'ES2025', meta: '16. Ausgabe · Juni 2025', highlights: 'Iterator-Helfer, neue Set-Methoden, Import-Attribute und JSON-Module, RegExp-Modifier und Duplicate Named Groups, Promise.try, Float16Array.' },
+  { id: 'es2026', label: 'ES2026 (Entwurf)', meta: '17. Ausgabe · Entwurf', highlights: 'Array.fromAsync, Error.isError, Math.sumPrecise, Base64- und Hex-Methoden auf Uint8Array, Explicit Resource Management (using).' },
+];
+const TXT = 'var(--color-text)', ACC = 'var(--color-accent)';
+const CH = [
+  { de: 'Geltungsbereich', en: 'Scope', since: 0, paras: ['Dieser Standard definiert die Programmiersprache ECMAScript – das, was du im Alltag JavaScript nennst. Er legt fest, welche Syntax gültig ist, wie Programme ausgewertet werden und welche eingebauten Objekte jede Umgebung mitbringen muss.', 'Nicht Teil des Standards: das DOM, fetch, Node-APIs oder irgendetwas, das mit einer konkreten Plattform zu tun hat. Diese Dinge kommen aus anderen Spezifikationen.'], subs: [] },
+  { de: 'Konformität', en: 'Conformance', since: 0, paras: ['Eine konforme Implementierung muss alles unterstützen, was der Standard beschreibt – darf aber zusätzliche Objekte, Eigenschaften und Syntax anbieten, solange sie dem Standard nicht widersprechen.'], subs: [] },
+  { de: 'Normative Referenzen', en: 'Normative References', since: 0, paras: ['Der Standard baut auf anderen Normen auf, vor allem auf IEEE 754 (Gleitkommazahlen) und dem Unicode-Standard. Wo diese Dokumente etwas festlegen, gilt es auch hier.'], subs: [], draft: true },
+  { de: 'Überblick', en: 'Overview', since: 0, paras: ['Das freundlichste Kapitel des Standards: Hier wird erklärt, was ECMAScript überhaupt ist – eine objektbasierte Sprache, in der fast alles ein Objekt mit Eigenschaften ist, mit Prototypen statt Klassen als Vererbungsmechanismus (auch wenn es seit ES2015 die class-Syntax gibt).', 'Außerdem definiert das Kapitel die Begriffe, die überall sonst benutzt werden: Typ, primitiver Wert, Objekt, Konstruktor, Prototyp, eingebautes Objekt, undefined, null, Boolean, String, Number, BigInt, Symbol und mehr.'], subs: ['Web-Scripting', 'Hosts und Implementierungen', 'ECMAScript-Überblick', 'Begriffe und Definitionen', 'Aufbau dieser Spezifikation'] },
+  { de: 'Notationskonventionen', en: 'Notational Conventions', since: 0, paras: ['Wie liest man diese Spezifikation? Das Kapitel erklärt die Grammatiknotation (kontextfreie Grammatiken mit Produktionen), die Algorithmusschritte und Konventionen wie „Let x be …“ oder ReturnIfAbrupt.'], subs: ['Syntaktische und lexikalische Grammatiken', 'Algorithmuskonventionen', 'Laufzeitsemantik', 'Statische Semantik'] },
+  { de: 'Datentypen und Werte', en: 'ECMAScript Data Types and Values', since: 0, paras: ['Sieben primitive Typen und ein Objekttyp: Undefined, Null, Boolean, String, Symbol, Number, BigInt – und Object. Das Kapitel definiert jeden Typ genau: Strings sind Folgen von 16-Bit-Codeeinheiten, Numbers sind IEEE-754-Doubles, BigInts beliebig groß.', 'Daneben gibt es Spezifikationstypen, die nur im Standard selbst existieren – Records, Completion Records, Property Descriptors, Environment Records. Du siehst sie nie im Code, aber sie erklären, warum sich Code so verhält, wie er es tut.'], subs: ['Sprachtypen', 'Spezifikationstypen'], example: { title: 'typeof und die sieben Primitive', code: 'const werte = [undefined, null, true, "Text", Symbol("s"), 42, 42n, {}];\nfor (const w of werte) console.log(typeof w, "→", String(w));\n\n// Bekannte Stolperfalle: typeof null\nconsole.log("null ist ein", typeof null, "– historischer Fehler, bleibt aus Kompatibilität");' } },
+  { de: 'Abstrakte Operationen', en: 'Abstract Operations', since: 0, paras: ['Die Werkzeugkiste der Spezifikation: ToNumber, ToString, ToPrimitive, IsCallable, SameValue, … Diese Operationen sind kein JavaScript, das du aufrufen könntest – sie beschreiben, was intern passiert, wenn du zum Beispiel "5" * 2 schreibst.'], subs: ['Typkonvertierung', 'Test- und Vergleichsoperationen', 'Operationen auf Objekten', 'Operationen auf Iteratoren'], example: { title: 'ToPrimitive in Aktion', code: 'const konto = {\n  saldo: 120,\n  valueOf() { return this.saldo; },\n  toString() { return `Konto (${this.saldo} €)`; }\n};\n\nconsole.log(konto + 30);      // Hinweis "default" → valueOf\nconsole.log(`${konto}`);      // Hinweis "string"  → toString\nconsole.log(konto > 100);' } },
+  { de: 'Syntaxgesteuerte Operationen', en: 'Syntax-Directed Operations', since: 2, paras: ['Operationen, die über den Syntaxbaum definiert sind: BoundNames, Contains, Evaluation. Für jede Produktion der Grammatik steht hier, was sie bedeutet.'], subs: [], draft: true },
+  { de: 'Ausführbarer Code und Ausführungskontexte', en: 'Executable Code and Execution Contexts', since: 0, paras: ['Hier steckt das Modell hinter Scopes, Closures und dem Event Loop: Environment Records speichern Bindungen, Realms kapseln globale Objekte, Execution Contexts liegen auf einem Stack, und Jobs (die Grundlage für Promises) werden nacheinander abgearbeitet.', 'Wenn du je wissen wolltest, warum eine Closure ihre Variablen behält oder warum ein await den Rest der Funktion „später“ ausführt – hier steht es.'], subs: ['Environment Records', 'PrivateEnvironment Records', 'Realms', 'Ausführungskontexte', 'Jobs und Host-Operationen', 'Agents'], example: { title: 'Closures und Jobs', code: 'function zaehler() {\n  let n = 0;                 // lebt im Environment Record der Funktion\n  return () => ++n;\n}\nconst tick = zaehler();\nconsole.log(tick(), tick(), tick());\n\nconsole.log("1 – synchron");\nPromise.resolve().then(() => console.log("3 – Promise-Job"));\nconsole.log("2 – noch synchron");' } },
+  { de: 'Gewöhnliche und exotische Objekte', en: 'Ordinary and Exotic Objects Behaviours', since: 0, paras: ['Jedes Objekt hat interne Methoden wie [[Get]], [[Set]] und [[DefineOwnProperty]]. „Gewöhnliche“ Objekte verhalten sich alle gleich; „exotische“ – Arrays, Strings, Proxies, Module-Namespaces – überschreiben einzelne Methoden. Deshalb aktualisiert ein Array seine length, wenn du arr[10] setzt.'], subs: ['Gewöhnliche Objekte', 'Eingebaute exotische Objekte', 'Proxy-Objekte'], example: { title: 'Ein Array ist exotisch', code: 'const a = [1, 2, 3];\na[6] = 7;\nconsole.log(a.length, a);\n\n// Proxy: eigene interne Methoden\nconst laut = new Proxy({}, {\n  get: (ziel, key) => `Du wolltest „${String(key)}“`\n});\nconsole.log(laut.irgendwas);' } },
+  { de: 'Quelltext', en: 'ECMAScript Language: Source Text', since: 0, paras: ['Quelltext ist eine Folge von Unicode-Codepoints. Das Kapitel definiert, was Whitespace, Zeilenumbrüche, Kommentare und Hashbang-Zeilen sind.'], subs: [] },
+  { de: 'Lexikalische Grammatik', en: 'Lexical Grammar', since: 0, paras: ['Wie aus Zeichen Tokens werden: Bezeichner, Schlüsselwörter, Literale, Punctuatoren. Auch die berühmte automatische Semikolon-Einfügung (ASI) ist hier definiert – mit ihren drei Regeln und den Fällen, in denen sie dich überrascht.'], subs: ['Unicode-Formatzeichen', 'Whitespace', 'Zeilenumbrüche', 'Kommentare', 'Tokens', 'Namen und Schlüsselwörter', 'Literale', 'Automatische Semikolon-Einfügung'], example: { title: 'ASI-Überraschung', code: 'function ohne() {\n  return\n    "kommt nie an"\n}\nconsole.log(ohne());\n\nfunction mit() {\n  return (\n    "kommt an"\n  );\n}\nconsole.log(mit());' } },
+  { de: 'Ausdrücke', en: 'Expressions', since: 0, paras: ['Das längste Kapitel: primäre Ausdrücke, Member-Zugriff, Optional Chaining, Operatoren mit ihren Präzedenzen, Zuweisungen, der Komma-Operator. Für jeden Operator steht die exakte Auswertungsreihenfolge und Typkonvertierung.'], subs: ['Bezeichner', 'Primäre Ausdrücke', 'Linksseitige Ausdrücke', 'Update-Ausdrücke', 'Unäre Operatoren', 'Exponentialoperator', 'Multiplikative Operatoren', 'Additive Operatoren', 'Bitweise Shift-Operatoren', 'Relationale Operatoren', 'Gleichheitsoperatoren', 'Binäre bitweise Operatoren', 'Binäre logische Operatoren', 'Bedingungsoperator', 'Zuweisungsoperatoren', 'Komma-Operator'], example: { title: 'Optional Chaining & Nullish Coalescing', code: 'const nutzer = { name: "Ada", adresse: null };\n\nconsole.log(nutzer.adresse?.stadt);\nconsole.log(nutzer.adresse?.stadt ?? "unbekannt");\nconsole.log(nutzer.spitzname || "kein Spitzname");\n\n// ?? vs ||: der Unterschied bei 0 und ""\nconst anzahl = 0;\nconsole.log(anzahl || 10, anzahl ?? 10);' } },
+  { de: 'Anweisungen und Deklarationen', en: 'Statements and Declarations', since: 0, paras: ['Blöcke, let/const/var, if, Schleifen inklusive for-of und for-await-of, switch, try/catch/finally, labels. Auch die Semantik der Temporal Dead Zone von let und const ist hier festgelegt.'], subs: ['Block', 'Deklarationen', 'Leere Anweisung', 'Ausdrucksanweisung', 'if', 'Iterationsanweisungen', 'continue / break / return', 'with', 'switch', 'Markierte Anweisungen', 'throw', 'try', 'debugger'], example: { title: 'Temporal Dead Zone', code: 'try {\n  console.log(spaeter);\n  let spaeter = 1;\n} catch (e) {\n  console.error(e.message);\n}\n\nconsole.log(typeof hoisted, "– var wird gehoistet");\nvar hoisted = 2;' } },
+  { de: 'Funktionen und Klassen', en: 'Functions and Classes', since: 0, paras: ['Funktionsdeklarationen, Arrow Functions, Methoden, Generatoren, async-Funktionen und Klassen mit Feldern, privaten Namen (#name) und statischen Blöcken. Dazu: Parameterlisten mit Defaults, Rest und Destructuring.'], subs: ['Parameterlisten', 'Funktionsdefinitionen', 'Arrow Functions', 'Methodendefinitionen', 'Generatorfunktionen', 'Async-Generatorfunktionen', 'Klassendefinitionen', 'Async-Funktionen', 'Async-Arrow-Functions', 'Tail-Position-Aufrufe'], example: { title: 'Klassen mit privaten Feldern', code: 'class Konto {\n  #saldo = 0;\n  static #anzahl = 0;\n  static { console.log("Klasse wird initialisiert"); }\n  constructor(name) { this.name = name; Konto.#anzahl++; }\n  einzahlen(betrag) { this.#saldo += betrag; return this; }\n  get saldo() { return this.#saldo; }\n  static get anzahl() { return Konto.#anzahl; }\n}\nconst k = new Konto("Ada").einzahlen(50).einzahlen(25);\nconsole.log(k.saldo, Konto.anzahl);\nconsole.log(Object.keys(k));   // #saldo ist unsichtbar' } },
+  { de: 'Skripte und Module', en: 'Scripts and Modules', since: 1, paras: ['Zwei Arten von Programmen: Skripte (klassisch) und Module (immer strict, eigener Scope, import/export). Das Kapitel beschreibt Linking, Evaluation, zyklische Abhängigkeiten, Top-Level await und seit ES2025 auch Import-Attribute wie with { type: "json" }.'], subs: ['Skripte', 'Module'] },
+  { de: 'Fehlerbehandlung', en: 'Error Handling and Language Extensions', since: 0, paras: ['Wann welcher Fehler geworfen wird – SyntaxError früh beim Parsen, TypeError und RangeError zur Laufzeit – und welche Erweiterungen Implementierungen erlauben dürfen.'], subs: [] },
+  { de: 'Eingebaute Standardobjekte', en: 'ECMAScript Standard Built-in Objects', since: 0, paras: ['Die Spielregeln für alle folgenden Kapitel: Eingebaute Funktionen haben eine length und einen name, sind nicht per new aufrufbar, sofern nicht anders gesagt, und ihre Eigenschaften sind standardmäßig writable und configurable, aber nicht enumerable.'], subs: [] },
+  { de: 'Das globale Objekt', en: 'The Global Object', since: 0, paras: ['globalThis, Infinity, NaN, undefined, eval, isFinite, isNaN, parseFloat, parseInt, die URI-Funktionen – und die Liste aller Konstruktoren, die global erreichbar sein müssen.'], subs: ['Wert-Eigenschaften', 'Funktions-Eigenschaften', 'Konstruktor-Eigenschaften', 'Weitere Eigenschaften'] },
+  { de: 'Fundamentale Objekte', en: 'Fundamental Objects', since: 0, paras: ['Object, Function, Boolean, Symbol und die Error-Hierarchie. Hier stehen Object.keys, Object.groupBy, structuredClone gehört übrigens nicht hierher – das ist HTML.'], subs: ['Object', 'Function', 'Boolean', 'Symbol', 'Error-Objekte'], example: { title: 'Object.groupBy (ES2024)', code: 'const buecher = [\n  { titel: "Eloquent JS", jahr: 2018 },\n  { titel: "You Don\'t Know JS", jahr: 2020 },\n  { titel: "JS: The Good Parts", jahr: 2008 }\n];\nconst nachJahrzehnt = Object.groupBy(buecher, b => `${Math.floor(b.jahr / 10) * 10}er`);\nconsole.log(nachJahrzehnt);' } },
+  { de: 'Zahlen und Datum', en: 'Numbers and Dates', since: 0, paras: ['Number, BigInt, Math und Date. Das Date-Kapitel ist berüchtigt – Monate ab 0, Zeitzonen-Chaos – und der Grund, warum Temporal so lange in Arbeit war.'], subs: ['Number', 'BigInt', 'Math', 'Date'], example: { title: 'Number vs. BigInt', code: 'console.log(0.1 + 0.2);\nconsole.log(Number.MAX_SAFE_INTEGER + 2);\nconsole.log(9007199254740993n + 2n);\nconsole.log(Number.isSafeInteger(2 ** 53));\n\ntry { console.log(1n + 1); } catch (e) { console.error(e.message); }' } },
+  { de: 'Textverarbeitung', en: 'Text Processing', since: 0, paras: ['String und RegExp. Alle String-Methoden von at bis trimEnd, Unicode-Normalisierung, und die komplette Grammatik regulärer Ausdrücke inklusive Named Groups, Lookbehind, dem v-Flag und seit ES2025 Inline-Modifiern.'], subs: ['String', 'RegExp'], example: { title: 'Named Groups und matchAll', code: 'const text = "ES2015, ES2020 und ES2025";\nconst re = /ES(?<jahr>\\d{4})/g;\nfor (const m of text.matchAll(re)) console.log(m.groups.jahr, "an Position", m.index);\n\nconsole.log("straße".normalize("NFD").length, "straße".length);' } },
+  { de: 'Indizierte Sammlungen', en: 'Indexed Collections', since: 0, paras: ['Array und die TypedArrays. Hier sind alle Array-Methoden definiert – auch die nicht-mutierenden aus ES2023 (toSorted, toReversed, toSpliced, with) und Array.fromAsync aus ES2026.'], subs: ['Array-Objekte', 'TypedArray-Objekte'], example: { title: 'Nicht-mutierende Array-Methoden', code: 'const original = [3, 1, 2];\nconst sortiert = original.toSorted();\nconst getauscht = original.with(0, 99);\n\nconsole.log(original, sortiert, getauscht);\nconsole.log(original.at(-1), original.findLast(n => n < 3));' } },
+  { de: 'Schlüsselbasierte Sammlungen', en: 'Keyed Collections', since: 1, paras: ['Map, Set, WeakMap und WeakSet. Seit ES2025 hat Set endlich Mengenoperationen: union, intersection, difference, symmetricDifference, isSubsetOf, isSupersetOf, isDisjointFrom.'], subs: ['Map', 'Set', 'WeakMap', 'WeakSet'], example: { title: 'Set-Methoden (ES2025)', code: 'const frontend = new Set(["JS", "CSS", "HTML"]);\nconst backend  = new Set(["JS", "SQL", "Go"]);\n\nconsole.log([...frontend.union(backend)]);\nconsole.log([...frontend.intersection(backend)]);\nconsole.log([...frontend.difference(backend)]);\nconsole.log(new Set(["JS"]).isSubsetOf(frontend));' } },
+  { de: 'Strukturierte Daten', en: 'Structured Data', since: 0, paras: ['ArrayBuffer, SharedArrayBuffer, DataView, Atomics und JSON. Ab ES2024 können ArrayBuffer wachsen (resizable), ab ES2026 kann Uint8Array direkt nach Base64 und Hex konvertieren.'], subs: ['ArrayBuffer', 'SharedArrayBuffer', 'DataView', 'Atomics', 'JSON'], example: { title: 'JSON mit Reviver', code: 'const roh = \'{"titel":"ES2026","datum":"2026-06-25T10:00:00Z"}\';\nconst obj = JSON.parse(roh, (k, v) =>\n  k === "datum" ? new Date(v) : v\n);\nconsole.log(obj.datum instanceof Date, obj.datum.getFullYear());\nconsole.log(JSON.stringify({ a: 1, b: undefined, c: () => 1 }));' } },
+  { de: 'Speicherverwaltung', en: 'Managing Memory', since: 3, paras: ['WeakRef und FinalizationRegistry – die einzigen Stellen, an denen JavaScript dir den Garbage Collector zeigt. Der Standard warnt selbst: Benutz das nur, wenn du wirklich musst.'], subs: ['WeakRef', 'FinalizationRegistry'] },
+  { de: 'Kontrollabstraktionen', en: 'Control Abstraction Objects', since: 1, paras: ['Iteration, Generatoren, Promises, async-Funktionen. Seit ES2025 auch die Iterator-Helfer: map, filter, take, drop, flatMap, reduce, toArray, forEach, some, every, find – lazy, direkt auf jedem Iterator.'], subs: ['Iteration', 'Promise', 'GeneratorFunction', 'AsyncGeneratorFunction', 'Generator', 'AsyncGenerator', 'AsyncFunction'], example: { title: 'Iterator-Helfer (ES2025)', code: 'function* natuerliche() { let n = 1; while (true) yield n++; }\n\nconst ergebnis = natuerliche()\n  .filter(n => n % 2 === 0)\n  .map(n => n * n)\n  .take(5)\n  .toArray();\nconsole.log(ergebnis);\n\nconst ergebnisse = await Promise.allSettled([\n  Promise.resolve("ok"), Promise.reject(new Error("nope"))\n]);\nconsole.log(ergebnisse.map(r => r.status));' } },
+  { de: 'Reflexion', en: 'Reflection', since: 1, paras: ['Reflect und Proxy: Metaprogrammierung. Reflect spiegelt die internen Methoden aus Kapitel 10 eins zu eins als Funktionen; Proxy lässt dich sie abfangen.'], subs: ['Reflect', 'Proxy', 'Module-Namespace-Objekte'] },
+  { de: 'Speichermodell', en: 'Memory Model', since: 2, paras: ['Wie sich SharedArrayBuffer und Atomics zwischen Agents verhalten – Reihenfolge, Sichtbarkeit, Race Conditions. Nur relevant, wenn du mit Web Workers und geteiltem Speicher arbeitest.'], subs: [], draft: true },
+];
+const ES5 = [
+  { de: 'Geltungsbereich', en: 'Scope', paras: ['ECMAScript 5.1 – die Ausgabe, die das „moderne“ JavaScript vorbereitet hat: Strict Mode, JSON, Property-Descriptors.'] },
+  { de: 'Konformität', en: 'Conformance', paras: ['Anforderungen an konforme Implementierungen.'] },
+  { de: 'Normative Referenzen', en: 'Normative References', paras: ['IEEE 754, Unicode 3.0, ISO/IEC 10646.'] },
+  { de: 'Überblick', en: 'Overview', paras: ['Objektbasierte Sprache, Prototypen, Begriffe.'] },
+  { de: 'Notationskonventionen', en: 'Notational Conventions', paras: ['Grammatiknotation und Algorithmusschritte.'] },
+  { de: 'Quelltext', en: 'Source Text', paras: ['Quelltext als Folge von UTF-16-Codeeinheiten.'] },
+  { de: 'Lexikalische Konventionen', en: 'Lexical Conventions', paras: ['Tokens, Literale, reservierte Wörter, ASI.'] },
+  { de: 'Typen', en: 'Types', paras: ['Undefined, Null, Boolean, String, Number, Object – fünf Primitive, noch ohne Symbol und BigInt.'], example: { title: 'Fünf Primitive in ES5', code: 'var werte = [undefined, null, true, "Text", 42];\nfor (var i = 0; i < werte.length; i++) console.log(typeof werte[i]);' } },
+  { de: 'Typkonvertierung und Tests', en: 'Type Conversion and Testing', paras: ['ToPrimitive, ToBoolean, ToNumber, ToString, ToObject.'] },
+  { de: 'Ausführbarer Code und Ausführungskontexte', en: 'Executable Code and Execution Contexts', paras: ['Lexical Environments, Variable Instantiation, Strict Mode Code.'] },
+  { de: 'Ausdrücke', en: 'Expressions', paras: ['Operatoren und ihre Semantik.'] },
+  { de: 'Anweisungen', en: 'Statements', paras: ['var, if, Schleifen, switch, try.'] },
+  { de: 'Funktionsdefinition', en: 'Function Definition', paras: ['Funktionsdeklaration, -ausdruck und Function-Konstruktor.'] },
+  { de: 'Programm', en: 'Program', paras: ['Das Programm als Folge von Source Elements.'] },
+  { de: 'Eingebaute Standardobjekte', en: 'Standard Built-in ECMAScript Objects', paras: ['Global, Object, Function, Array, String, Boolean, Number, Math, Date, RegExp, Error, JSON.'], example: { title: 'Neu in ES5: Array-Iterationsmethoden', code: 'var zahlen = [1, 2, 3, 4];\nconsole.log(zahlen.filter(function (n) { return n % 2 === 0; }));\nconsole.log(zahlen.reduce(function (a, b) { return a + b; }, 0));\nconsole.log(JSON.stringify({ es: 5 }));' } },
+  { de: 'Fehler', en: 'Errors', paras: ['Wann SyntaxError, TypeError, RangeError etc. geworfen werden.'] },
+];
+class Component extends DCLogic {
+  state = { theme: 'light', version: 5, chapter: 12, query: '' };
+  componentDidMount() { const t = localStorage.getItem('esde-theme') || 'light'; document.documentElement.dataset.theme = t; this.setState({ theme: t }); }
+  toggleTheme = () => { const t = this.state.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('esde-theme', t); document.documentElement.dataset.theme = t; this.setState({ theme: t }); };
+  list() { const v = this.state.version; return v === 0 ? ES5 : CH.filter(c => c.since <= v); }
+  renderVals() {
+    const { version, chapter, query } = this.state;
+    const all = this.list().map((c, i) => ({ ...c, n: i + 1, idx: i }));
+    const q = query.trim().toLowerCase();
+    const shown = q ? all.filter(c => (c.de + ' ' + c.en + ' ' + (c.paras || []).join(' ') + ' ' + (c.subs || []).join(' ')).toLowerCase().includes(q)) : all;
+    const cur = all[Math.min(chapter, all.length - 1)];
+    return {
+      themeLabel: this.state.theme === 'dark' ? 'Hell' : 'Dunkel', toggleTheme: this.toggleTheme, prevent: e => e.preventDefault(),
+      versions: VERSIONS.map((v, i) => ({ ...v, checked: i === version, select: () => this.setState({ version: i, chapter: 0, query: '' }) })),
+      edition: VERSIONS[version], query, onQuery: e => this.setState({ query: e.target.value }), noHits: shown.length === 0,
+      chapters: shown.map(c => ({ ...c, current: c.idx === cur.idx ? 'page' : undefined, color: c.idx === cur.idx ? ACC : TXT, weight: c.idx === cur.idx ? 600 : 400, select: () => this.setState({ chapter: c.idx }) })),
+      chapter: { ...cur, hasSubs: !!(cur.subs && cur.subs.length), hasExample: !!cur.example, exampleCode: cur.example ? cur.example.code : '', exampleTitle: cur.example ? cur.example.title : '', draft: !!cur.draft },
+      prev: () => this.setState({ chapter: Math.max(0, cur.idx - 1) }), next: () => this.setState({ chapter: Math.min(all.length - 1, cur.idx + 1) }),
+      noPrev: cur.idx === 0, noNext: cur.idx === all.length - 1,
+    };
+  }
+}
+</script>
+</body>
+</html>

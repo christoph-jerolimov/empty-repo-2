@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="design_doc_mode" content="canvas"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css"><style>body{margin:0;background:#e9e6e1}:root[data-theme="dark"] body{background:#111}.dv-turn{padding:40px 44px 32px;scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:var(--color-text);color:var(--color-bg);border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:var(--color-text)}.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:color-mix(in srgb,var(--color-text) 12%,transparent);color:var(--color-text);border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:var(--color-text)}.dv-card{width:1200px;max-width:100%;background:var(--color-bg);border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:var(--color-text);opacity:.6}</style></helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Startseite – drei Richtungen (Layout, Dichte, Navigation, Ansprache). Unterseiten: <a href="Standard.dc.html">Standard</a> · <a href="Artikel.dc.html">Artikel</a> · <a href="Tutorials.dc.html">Tutorials</a> · <a href="Blog.dc.html">Blog</a> · <a href="Ueber.dc.html">Über</a></span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Titelseite – Top-Bar, luftig, Zeitungs-Furniture, lockere Ansprache</div>
+<div class="dv-card">
+  <header style="display:flex;align-items:center;gap:30px;padding:20px 40px;flex-wrap:wrap">
+    <a href="Startseite.dc.html" class="es-link" style="display:flex;align-items:center;gap:10px;margin-right:auto"><span style="width:30px;height:30px;border:2px solid currentColor;border-radius:var(--radius-lg);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">ES</span><span style="font-weight:600;font-size:19px;letter-spacing:-.01em">EcmaScript<span style="color:var(--color-accent)">.de</span></span></a>
+    <nav class="es-nav" style="display:flex;gap:20px;flex-wrap:wrap"><a href="Standard.dc.html">Standard</a><a href="Artikel.dc.html">Artikel</a><a href="Tutorials.dc.html">Tutorials</a><a href="Blog.dc.html">Blog</a><a href="Ueber.dc.html">Über</a></nav>
+    <button onClick="{{ toggleTheme }}" class="btn btn-secondary" style="padding:6px 12px;font-size:13px">{{ themeLabel }}</button>
+  </header>
+  <div style="margin:10px 40px 0;border-top:3px solid var(--color-text);border-bottom:1px solid var(--color-text);padding:6px 0;display:flex;justify-content:space-between;gap:20px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap"><span>Mittwoch, 30. September 2026</span><span>ECMA-262 · 17. Ausgabe · Deutsch</span><span>Unabhängig · Nicht offiziell · Kostenlos</span></div>
+  <main style="padding:50px 40px 0">
+    <div style="max-width:860px">
+      <h1 style="font-size:64px;line-height:1.05;margin-bottom:25px;text-wrap:balance">JavaScript, wie es im Standard steht. Nur verständlich.</h1>
+      <p style="font-size:21px;line-height:1.5;max-width:680px">Der ECMAScript-Standard auf Deutsch – übersetzt, kommentiert, mit Beispielen, die du direkt hier ausführen kannst. Dazu Artikel, kurze Tutorials und ein Blog über das, was TC39 gerade beschließt.</p>
+      <form onSubmit="{{ prevent }}" style="display:flex;gap:10px;max-width:600px;margin-top:30px"><input class="input" type="search" placeholder="Suchen: „Promise“, „Kapitel 13“, „Optional Chaining“ …" aria-label="Suche" style="font-size:16px;min-height:46px"><button class="btn btn-primary" type="submit" style="min-height:46px;padding-inline:20px">Suchen</button></form>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:50px;margin-top:80px">
+      <div><h6 style="color:var(--color-accent)">Der Standard</h6><h3 style="font-size:26px;margin-bottom:10px"><a href="Standard.dc.html" class="es-link">29 Kapitel, sechs Ausgaben, eine Suche</a></h3><p style="font-size:15px;line-height:1.55">Von ES5 bis zum ES2026-Entwurf. Wähl deine Version und klick dich durch – 24 von 29 Kapiteln sind übersetzt.</p><a href="Standard.dc.html" style="font-size:14px">Zum Standard →</a></div>
+      <div><h6 style="color:var(--color-accent)">Neuester Artikel</h6><h3 style="font-size:26px;margin-bottom:10px"><a href="Artikel-Detail.dc.html" class="es-link">Iterator-Helfer: Endlich lazy, endlich lesbar</a></h3><p style="font-size:15px;line-height:1.55">ES2025 gibt jedem Iterator map, filter und take. Warum das mehr ist als Zucker – und wo Arrays trotzdem gewinnen.</p><span class="text-muted" style="font-size:13px">Lena Hartmann · 14 Min.</span></div>
+      <div><h6 style="color:var(--color-accent)">Tutorial der Woche</h6><h3 style="font-size:26px;margin-bottom:10px"><a href="Tutorials.dc.html" class="es-link">Promises verstehen</a></h3><p style="font-size:15px;line-height:1.55">Drei Zustände, eine Kette, ein await. In 15 Minuten vom Callback zur sauberen async-Funktion.</p><span class="text-muted" style="font-size:13px">Einsteiger · 15 Min.</span></div>
+    </div>
+    <div style="margin-top:80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:50px;align-items:start">
+      <div><h6 style="color:var(--color-accent)">Aus dem Blog</h6>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <a href="Blog.dc.html" class="es-link" style="display:grid;grid-template-columns:120px 1fr;gap:15px;font-size:15px"><span class="text-muted" style="font-size:13px">24. Sept.</span><span style="font-weight:600">Der Live-Editor ist da – überall</span></a>
+          <a href="Blog.dc.html" class="es-link" style="display:grid;grid-template-columns:120px 1fr;gap:15px;font-size:15px"><span class="text-muted" style="font-size:13px">2. Aug.</span><span style="font-weight:600">Rückblick: TC39 im Juli</span></a>
+          <a href="Blog.dc.html" class="es-link" style="display:grid;grid-template-columns:120px 1fr;gap:15px;font-size:15px"><span class="text-muted" style="font-size:13px">27. Juni</span><span style="font-weight:600">ES2025 ist da – was drin ist</span></a>
+        </div></div>
+      <div style="grid-column:span 2"><h6 style="color:var(--color-accent)">Direkt ausprobieren</h6><dc-import name="LiveEditor" title="Set-Methoden (ES2025)" code="{{ heroCode }}" hint-size="100%,200px"></dc-import></div>
+    </div>
+  </main>
+  <footer style="margin-top:80px;padding:40px 40px 50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;font-size:14px">
+    <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Newsletter</div><p class="text-muted" style="font-size:13px">Einmal im Monat: neue Artikel, Tutorials und was TC39 beschlossen hat.</p><form style="display:flex;gap:10px" onSubmit="{{ prevent }}"><input class="input" type="email" placeholder="du@beispiel.de" aria-label="E-Mail"><button class="btn btn-primary" type="submit">Abonnieren</button></form></div>
+    <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Mitmachen</div><div style="display:flex;flex-direction:column;gap:6px"><a href="#">GitHub – Quelltext &amp; Übersetzungen</a><a href="#">RSS-Feed</a><a href="#">Spenden – Serverkosten decken</a></div></div>
+    <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Hinweis</div><p class="text-muted" style="font-size:13px">EcmaScript.de ist ein unabhängiges Community-Projekt – nicht Ecma International, nicht TC39. Die offizielle Spezifikation findest du unter tc39.es/ecma262.</p><a href="Ueber.dc.html">Impressum</a></div>
+  </footer>
+</div></div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Nachschlagewerk – Sidebar-Navigation, kompakt, Suche als Hero, sachlichere Ansprache</div>
+<div class="dv-card" style="display:grid;grid-template-columns:240px minmax(0,1fr)">
+  <aside style="padding:25px 20px 30px 30px;display:flex;flex-direction:column;gap:30px;min-height:100%">
+    <a href="Startseite.dc.html" class="es-link" style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border:2px solid currentColor;border-radius:var(--radius-lg);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">ES</span><span style="font-weight:600;font-size:19px;letter-spacing:-.01em">EcmaScript<span style="color:var(--color-accent)">.de</span></span></a>
+    <nav class="es-nav" style="display:flex;flex-direction:column;gap:10px"><a href="Standard.dc.html" style="font-size:16px">Standard</a><a href="Artikel.dc.html" style="font-size:16px">Artikel</a><a href="Tutorials.dc.html" style="font-size:16px">Tutorials</a><a href="Blog.dc.html" style="font-size:16px">Blog</a><a href="Ueber.dc.html" style="font-size:16px">Über</a></nav>
+    <div><h6 style="color:var(--color-accent);margin-bottom:8px">Ausgaben</h6><div class="es-nav" style="display:flex;flex-direction:column;gap:6px;font-size:14px"><a href="Standard.dc.html">ES2026 (Entwurf)</a><a href="Standard.dc.html">ES2025</a><a href="Standard.dc.html">ES2023</a><a href="Standard.dc.html">ES2020</a><a href="Standard.dc.html">ES2015</a><a href="Standard.dc.html">ES5</a></div></div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px"><button onClick="{{ toggleTheme }}" class="btn btn-secondary" style="padding:6px 12px;font-size:13px;align-self:flex-start">{{ themeLabel }}</button><span class="text-muted" style="font-size:11px;line-height:1.5">Unabhängiges Projekt. Keine Verbindung zu Ecma International oder TC39.</span></div>
+  </aside>
+  <main style="padding:35px 40px 40px;min-width:0">
+    <h6 style="color:var(--color-accent);margin-bottom:8px">ECMA-262 · Deutsche Ausgabe · 17. Ausgabe (Entwurf)</h6>
+    <h1 style="font-size:40px;margin-bottom:20px;text-wrap:balance">Das Nachschlagewerk zur Sprache.</h1>
+    <form onSubmit="{{ prevent }}" style="display:flex;gap:10px;max-width:720px"><input class="input" type="search" placeholder="Kapitel, Abschnitt oder Begriff – z. B. „ToPrimitive“" aria-label="Suche" style="font-size:17px;min-height:52px"><button class="btn btn-primary" type="submit" style="min-height:52px;padding-inline:22px">Suchen</button></form>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;font-size:13px;align-items:center"><span class="text-muted">Häufig:</span><a href="Standard.dc.html" class="tag tag-accent" style="text-decoration:none">Ausdrücke</a><a href="Standard.dc.html" class="tag tag-accent" style="text-decoration:none">Promise</a><a href="Standard.dc.html" class="tag tag-accent" style="text-decoration:none">Klassen</a><a href="Standard.dc.html" class="tag tag-accent" style="text-decoration:none">Array</a><a href="Standard.dc.html" class="tag tag-accent" style="text-decoration:none">Module</a><a href="Standard.dc.html" class="tag tag-accent" style="text-decoration:none">ASI</a></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:30px 40px;margin-top:45px">
+      <div><h6 style="color:var(--color-accent);margin-bottom:10px">Kapitelübersicht</h6>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:4px 20px;font-size:13.5px;line-height:1.5">
+          <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="12"><a href="Standard.dc.html" class="es-link" style="display:grid;grid-template-columns:24px 1fr;gap:6px"><span style="opacity:.5;font-variant-numeric:tabular-nums">{{ c.n }}</span><span>{{ c.de }}</span></a></sc-for>
+        </div></div>
+      <div style="display:flex;flex-direction:column;gap:30px">
+        <div><h6 style="color:var(--color-accent);margin-bottom:10px">Zuletzt veröffentlicht</h6><div style="display:flex;flex-direction:column;gap:10px;font-size:14px;line-height:1.4">
+          <a href="Artikel-Detail.dc.html" class="es-link"><span class="text-muted" style="font-size:12px;display:block">Artikel · 12. Sept.</span>Iterator-Helfer: Endlich lazy, endlich lesbar</a>
+          <a href="Blog.dc.html" class="es-link"><span class="text-muted" style="font-size:12px;display:block">Blog · 24. Sept.</span>Der Live-Editor ist da – überall</a>
+          <a href="Artikel-Detail.dc.html" class="es-link"><span class="text-muted" style="font-size:12px;display:block">Artikel · 28. Aug.</span>Was macht TC39 eigentlich – und wer sitzt da?</a>
+          <a href="Tutorials.dc.html" class="es-link"><span class="text-muted" style="font-size:12px;display:block">Tutorial · Einsteiger</span>Optional Chaining und ??</a>
+        </div></div>
+        <div><h6 style="color:var(--color-accent);margin-bottom:10px">Übersetzungsstand</h6><div style="display:flex;justify-content:space-between;font-size:14px"><span>Kapitel übersetzt</span><span style="font-weight:600">24 / 29</span></div><div style="height:4px;background:var(--color-surface);border-radius:2px;margin-top:6px"><div style="width:83%;height:100%;background:var(--color-accent);border-radius:2px"></div></div></div>
+      </div>
+    </div>
+    <div style="margin-top:45px"><h6 style="color:var(--color-accent);margin-bottom:10px">Beispiel des Tages · Kapitel 13</h6><dc-import name="LiveEditor" title="Optional Chaining" code="{{ refCode }}" hint-size="100%,180px"></dc-import></div>
+    <div style="margin-top:40px;display:flex;gap:25px;font-size:13px;flex-wrap:wrap"><a href="#">Newsletter</a><a href="#">GitHub</a><a href="#">RSS</a><a href="#">Spenden</a><a href="Ueber.dc.html">Impressum</a></div>
+  </main>
+</div></div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Lernpfad – Top-Bar, mittlere Dichte, Editor im Hero, direkte Ansprache</div>
+<div class="dv-card">
+  <header style="display:flex;align-items:center;gap:30px;padding:20px 40px;flex-wrap:wrap">
+    <a href="Startseite.dc.html" class="es-link" style="display:flex;align-items:center;gap:10px;margin-right:auto"><span style="width:30px;height:30px;border:2px solid currentColor;border-radius:var(--radius-lg);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">ES</span><span style="font-weight:600;font-size:19px;letter-spacing:-.01em">EcmaScript<span style="color:var(--color-accent)">.de</span></span></a>
+    <form onSubmit="{{ prevent }}" style="flex:1 1 260px;max-width:380px"><input class="input" type="search" placeholder="Suchen …" aria-label="Suche"></form>
+    <nav class="es-nav" style="display:flex;gap:20px;flex-wrap:wrap"><a href="Standard.dc.html">Standard</a><a href="Artikel.dc.html">Artikel</a><a href="Tutorials.dc.html">Tutorials</a><a href="Blog.dc.html">Blog</a><a href="Ueber.dc.html">Über</a></nav>
+    <button onClick="{{ toggleTheme }}" class="btn btn-secondary" style="padding:6px 12px;font-size:13px">{{ themeLabel }}</button>
+  </header>
+  <main style="padding:40px 40px 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:50px;align-items:center">
+      <div><h6 style="color:var(--color-accent);margin-bottom:10px">Für alle, die es genau wissen wollen</h6><h1 style="font-size:50px;line-height:1.08;margin-bottom:20px;text-wrap:balance">Lies den Standard. Führ ihn aus. Versteh ihn.</h1><p style="font-size:18px;line-height:1.5">Du kennst JavaScript aus der Praxis – hier lernst du, warum es sich so verhält. Jedes Beispiel auf dieser Seite läuft live. Fang rechts an.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px"><a href="Tutorials.dc.html" class="btn btn-primary" style="min-height:44px;padding-inline:20px">Mit dem ersten Tutorial starten</a><a href="Standard.dc.html" class="btn btn-secondary" style="min-height:44px">Direkt zum Standard</a></div></div>
+      <dc-import name="LiveEditor" title="Dein erster Versuch" code="{{ learnCode }}" hint-size="100%,240px"></dc-import>
+    </div>
+    <section style="margin-top:80px"><h6 style="color:var(--color-accent)">Dein Lernpfad</h6><h2 style="font-size:32px;margin-bottom:25px">Vier Tutorials, dann liest du den Standard selbst.</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:30px">
+        <sc-for list="{{ path }}" as="s" hint-placeholder-count="4"><a href="Tutorials.dc.html" class="es-link" style="display:flex;flex-direction:column;gap:8px"><span style="font-size:44px;font-weight:600;line-height:1;color:var(--color-accent);font-variant-numeric:tabular-nums">{{ s.n }}</span><span style="font-weight:600;font-size:20px;line-height:1.2">{{ s.title }}</span><span style="font-size:14px;line-height:1.5;opacity:.85">{{ s.text }}</span><span class="text-muted" style="font-size:12px">{{ s.meta }}</span></a></sc-for>
+      </div></section>
+    <section style="margin-top:80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:50px">
+      <div><h6 style="color:var(--color-accent)">Dann weiter mit</h6><h3 style="font-size:24px"><a href="Artikel-Detail.dc.html" class="es-link">Iterator-Helfer: Endlich lazy, endlich lesbar</a></h3><p style="font-size:15px;line-height:1.55">Ein Artikel für den Moment, in dem Array-Methoden nicht mehr reichen.</p><span class="text-muted" style="font-size:13px">Artikel · 14 Min.</span></div>
+      <div><h6 style="color:var(--color-accent)">Neu im Standard</h6><h3 style="font-size:24px"><a href="Standard.dc.html" class="es-link">ES2026 (Entwurf): Was sich ändert</a></h3><p style="font-size:15px;line-height:1.55">Array.fromAsync, Error.isError, Math.sumPrecise, Base64 auf Uint8Array – kurz erklärt, direkt ausführbar.</p><span class="text-muted" style="font-size:13px">Kapitelübersicht · 6 Ausgaben</span></div>
+      <div><h6 style="color:var(--color-accent)">Aus dem Blog</h6><h3 style="font-size:24px"><a href="Blog.dc.html" class="es-link">Der Live-Editor ist da – überall</a></h3><p style="font-size:15px;line-height:1.55">Warum jetzt jedes Beispiel auf der Seite läuft – und was das mit dem Konsolen-Panel rechts zu tun hat.</p><span class="text-muted" style="font-size:13px">Blog · 24. Sept.</span></div>
+    </section>
+  </main>
+  <footer style="margin-top:80px;padding:40px 40px 50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;font-size:14px">
+    <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Newsletter</div><p class="text-muted" style="font-size:13px">Einmal im Monat: neue Artikel, Tutorials und was TC39 beschlossen hat.</p><form style="display:flex;gap:10px" onSubmit="{{ prevent }}"><input class="input" type="email" placeholder="du@beispiel.de" aria-label="E-Mail"><button class="btn btn-primary" type="submit">Abonnieren</button></form></div>
+    <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Mitmachen</div><div style="display:flex;flex-direction:column;gap:6px"><a href="#">GitHub – Quelltext &amp; Übersetzungen</a><a href="#">RSS-Feed</a><a href="#">Spenden – Serverkosten decken</a></div></div>
+    <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Hinweis</div><p class="text-muted" style="font-size:13px">EcmaScript.de ist ein unabhängiges Community-Projekt – nicht Ecma International, nicht TC39. Die offizielle Spezifikation findest du unter tc39.es/ecma262.</p><a href="Ueber.dc.html">Impressum</a></div>
+  </footer>
+</div></div>
+
+</div>
+<p class="dv-next">Weiter: „<a class="dv-oid" href="#1a">1a</a> mit der Sidebar aus <a class="dv-oid" href="#1b">1b</a>“ · „<a class="dv-oid" href="#1c">1c</a> als Hauptseite ausbauen“ · „Dunkelmodus auf allen Varianten prüfen“</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CH = ['Geltungsbereich','Konformität','Normative Referenzen','Überblick','Notationskonventionen','Datentypen und Werte','Abstrakte Operationen','Syntaxgesteuerte Operationen','Ausführbarer Code','Gewöhnliche und exotische Objekte','Quelltext','Lexikalische Grammatik','Ausdrücke','Anweisungen und Deklarationen','Funktionen und Klassen','Skripte und Module','Fehlerbehandlung','Eingebaute Standardobjekte','Das globale Objekt','Fundamentale Objekte','Zahlen und Datum','Textverarbeitung','Indizierte Sammlungen','Schlüsselbasierte Sammlungen','Strukturierte Daten','Speicherverwaltung','Kontrollabstraktionen','Reflexion','Speichermodell'];
+class Component extends DCLogic {
+  state = { theme: 'light' };
+  componentDidMount() { const t = localStorage.getItem('esde-theme') || 'light'; document.documentElement.dataset.theme = t; this.setState({ theme: t }); }
+  toggleTheme = () => { const t = this.state.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('esde-theme', t); document.documentElement.dataset.theme = t; this.setState({ theme: t }); };
+  renderVals() {
+    return {
+      themeLabel: this.state.theme === 'dark' ? 'Hell' : 'Dunkel', toggleTheme: this.toggleTheme, prevent: e => e.preventDefault(),
+      chapters: CH.map((de, i) => ({ de, n: i + 1 })),
+      heroCode: 'const frontend = new Set(["JS", "CSS", "HTML"]);\nconst backend  = new Set(["JS", "SQL", "Go"]);\nconsole.log([...frontend.intersection(backend)]);\nconsole.log([...frontend.union(backend)]);',
+      refCode: 'const antwort = { daten: { nutzer: null } };\nconsole.log(antwort.daten?.nutzer?.name ?? "unbekannt");',
+      learnCode: '// Ändere etwas und drück „Ausführen“\nconst sprachen = ["JavaScript", "ECMAScript", "JScript"];\n\nfor (const s of sprachen) {\n  console.log(`${s} hat ${s.length} Zeichen`);\n}\n\nconsole.log(typeof null, "– ein Fehler aus 1995, der bleibt");',
+      path: [
+        { n: 1, title: 'Destructuring in 10 Minuten', text: 'Werte aus Objekten und Arrays holen, ohne dich zu wiederholen.', meta: 'Einsteiger · 10 Min.' },
+        { n: 2, title: 'Optional Chaining und ??', text: 'Zwei Operatoren, die ganze if-Kaskaden ersetzen.', meta: 'Einsteiger · 8 Min.' },
+        { n: 3, title: 'Promises verstehen', text: 'Drei Zustände, eine Kette, ein await.', meta: 'Einsteiger · 15 Min.' },
+        { n: 4, title: 'Module: import und export', text: 'Code sauber trennen – live-Bindungen inklusive.', meta: 'Fortgeschritten · 12 Min.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
