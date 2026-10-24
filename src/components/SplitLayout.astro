@@ -1,0 +1,26 @@
+---
+// Sticky sidebar + main column (Standard, Tutorials) or main + sidebar (Blog).
+interface Props {
+  /** "side-left": sidebar left and sticky; "side-right": sidebar right. */
+  variant?: 'side-left' | 'side-right';
+}
+
+const { variant = 'side-left' } = Astro.props;
+---
+<div class:list={['split', variant]}>
+  {variant === 'side-left' && <aside class="side"><slot name="side" /></aside>}
+  <div class="main"><slot /></div>
+  {variant === 'side-right' && <aside class="side"><slot name="side" /></aside>}
+</div>
+
+<style>
+  .split { display: flex; flex-wrap: wrap; gap: 40px 60px; margin-top: 40px; align-items: flex-start; }
+  .main { flex: 3 1 480px; min-width: 0; max-width: 760px; }
+  .side-left .side { flex: 1 1 260px; max-width: 340px; position: sticky; top: 20px; }
+  .side-right { gap: 60px; margin-top: 50px; }
+  .side-right .side { flex: 1 1 240px; max-width: 300px; }
+
+  @media (max-width: 640px) {
+    .side-left .side { position: static; max-width: none; }
+  }
+</style>

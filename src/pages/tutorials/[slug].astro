@@ -1,0 +1,10 @@
+---
+import type { GetStaticPaths } from 'astro';
+import TutorialView from '../../components/TutorialView.astro';
+import { getTutorials } from '../../lib/content';
+
+export const getStaticPaths = (async () => (await getTutorials()).map((t) => ({ params: { slug: t.id } }))) satisfies GetStaticPaths;
+
+const { slug } = Astro.params;
+---
+<TutorialView id={slug} />

@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+import LiveEditor from '../components/LiveEditor.astro';
+import Teaser from '../components/Teaser.astro';
+import { getEntry } from 'astro:content';
+import { dateDayMonth, getEditions, getTutorials, tutorialHref, articleHref, postHref } from '../lib/content';
+
+const LEARN_CODE = `// Ändere etwas und drück „Ausführen“
+const sprachen = ["JavaScript", "ECMAScript", "JScript"];
+
+for (const s of sprachen) {
+  console.log(\`\${s} hat \${s.length} Zeichen\`);
+}
+
+console.log(typeof null, "– ein Fehler aus 1995, der bleibt");`;
+
+const path = (await getTutorials())
+  .filter((t) => t.data.pathStep)
+  .sort((a, b) => a.data.pathStep! - b.data.pathStep!);
+// The teaser copy below is written for these two entries.
+const article = (await getEntry('artikel', 'iterator-helfer'))!;
+const post = (await getEntry('blog', 'live-editor'))!;
+const editions = await getEditions();
+const newest = editions.at(-1)!;
+---
+<Base headerSearch>
+  <main class="container home">
+    <div class="hero">
+      <div>
+        <h6 class="kicker hero-kicker">Für alle, die es genau wissen wollen</h6>
+        <h1>Lies den Standard. Führ ihn aus. Versteh ihn.</h1>
+        <p class="hero-lead">Du kennst JavaScript aus der Praxis – hier lernst du, warum es sich so verhält. Jedes Beispiel auf dieser Seite läuft live. Fang rechts an.</p>
+        <div class="hero-actions">
+          <a href={tutorialHref(path[0].id)} class="btn btn-primary">Mit dem ersten Tutorial starten</a>
+          <a href="/standard/" class="btn btn-secondary">Direkt zum Standard</a>
+        </div>
+      </div>
+      <LiveEditor title="Dein erster Versuch" code={LEARN_CODE} />
+    </div>
+
+    <section class="path">
+      <h6 class="kicker">Dein Lernpfad</h6>
+      <h2>Vier Tutorials, dann liest du den Standard selbst.</h2>
+      <div class="path-grid">
+        {path.map((t) => (
+          <a href={tutorialHref(t.id)} class="es-link path-step">
+            <span class="path-n">{t.data.pathStep}</span>
+            <span class="path-title">{t.data.title}</span>
+            <span class="path-text">{t.data.pathText ?? t.data.intro}</span>
+            <span class="text-muted path-meta">{t.data.level} · {t.data.minutes} Min.</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="teasers">
+      <Teaser kicker="Dann weiter mit" title={article.data.title} href={articleHref(article.id)} meta={`Artikel · ${article.data.minutes} Min.`}>
+        Ein Artikel für den Moment, in dem Array-Methoden nicht mehr reichen.
+      </Teaser>
+      <Teaser kicker="Neu im Standard" title={`${newest.data.label}: Was sich ändert`} href={`/standard/${newest.id}/1/`} meta={`Kapitelübersicht · ${editions.length} Ausgaben`}>
+        Array.fromAsync, Error.isError, Math.sumPrecise, Base64 auf Uint8Array – kurz erklärt, direkt ausführbar.
+      </Teaser>
+      <Teaser kicker="Aus dem Blog" title={post.data.title} href={postHref(post.id)} meta={`Blog · ${dateDayMonth(post.data.date)}`}>
+        Warum jetzt jedes Beispiel auf der Seite läuft – und was das mit dem Konsolen-Panel rechts zu tun hat.
+      </Teaser>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .home { padding-top: 40px; }
+  .hero {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+    gap: 50px; align-items: center;
+  }
+  .hero-kicker { margin-bottom: 10px; }
+  .hero h1 { font-size: clamp(36px, 6.5vw, 50px); line-height: 1.08; margin-bottom: 20px; text-wrap: balance; }
+  .hero-lead { font-size: 18px; line-height: 1.5; }
+  .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+  .hero-actions .btn { min-height: 44px; }
+  .hero-actions .btn-primary { padding-inline: 20px; }
+
+  .path { margin-top: 80px; }
+  .path h2 { font-size: clamp(26px, 4.2vw, 32px); margin-bottom: 25px; }
+  .path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 30px; }
+  .path-step { display: flex; flex-direction: column; gap: 8px; }
+  .path-n { font-size: 44px; font-weight: 600; line-height: 1; color: var(--color-accent); font-variant-numeric: tabular-nums; }
+  .path-title { font-weight: 600; font-size: 20px; line-height: 1.2; }
+  .path-text { font-size: 14px; line-height: 1.5; opacity: .85; }
+  .path-meta { font-size: 12px; }
+
+  .teasers {
+    margin-top: 80px; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 50px;
+  }
+</style>

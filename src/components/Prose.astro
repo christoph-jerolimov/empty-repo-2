@@ -1,0 +1,35 @@
+---
+// Typography for rendered Markdown. Each variant matches one section of the design.
+interface Props {
+  variant: 'chapter' | 'tutorial' | 'article' | 'post' | 'page';
+}
+
+const { variant } = Astro.props;
+---
+<div class:list={['prose', variant]}><slot /></div>
+
+<style>
+  .prose :global(p:not(.le-hint)) { font-size: 17px; line-height: 1.6; }
+
+  /* Spec chapters: sections list in two columns */
+  .chapter :global(h4) { margin-top: 30px; }
+  .chapter :global(ol) { margin: 0 0 20px; padding-left: 22px; font-size: 15px; line-height: 1.7; columns: 2; column-gap: 30px; }
+
+  /* Tutorials: numbered steps */
+  .tutorial :global(p:not(.le-hint)), .post :global(p:not(.le-hint)) { font-size: 16px; }
+  .tutorial :global(h3) { font-size: 24px; margin: 35px 0 10px; }
+
+  /* Articles: first paragraph is the lead */
+  .article :global(p) { line-height: 1.65; }
+  .article > :global(p:first-child) { font-size: 21px; line-height: 1.45; font-style: italic; margin-bottom: 40px; }
+  .article :global(h2) { font-size: 30px; margin-top: 50px; }
+  .article > :global(p:first-child + h2) { margin-top: 40px; }
+
+  /* Plain pages (Über) */
+  .page :global(h2) { font-size: 30px; margin-top: 60px; }
+  .page > :global(:not(.wide)) { max-width: 720px; }
+
+  @media (max-width: 640px) {
+    .chapter :global(ol) { columns: 1; }
+  }
+</style>

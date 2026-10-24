@@ -1,0 +1,90 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageIntro from './PageIntro.astro';
+import SplitLayout from './SplitLayout.astro';
+import SideNav from './SideNav.astro';
+import Prose from './Prose.astro';
+import Pager from './Pager.astro';
+import { chapterHref, getChapters, getEditions, searchText } from '../lib/content';
+import { LINKS } from '../data/site';
+
+interface Props {
+  editionId: string;
+  /** 1-based chapter number within the edition. */
+  n: number;
+}
+
+const { editionId, n } = Astro.props;
+const editions = await getEditions();
+const edition = editions.find((e) => e.id === editionId)!;
+const chapters = await getChapters(editionId);
+const chapter = chapters[n - 1];
+const { Content } = await render(chapter);
+---
+<Base
+  title={`${chapter.data.title} – ${edition.data.label}`}
+  description={`Kapitel ${n} des ECMAScript-Standards (${edition.data.label}) auf Deutsch: ${chapter.data.title}.`}
+  current="standard"
+>
+  <main class="container page-main">
+    <PageIntro
+      kicker="ECMA-262 · Deutsche Ausgabe"
+      title="Der Standard – übersetzt, kommentiert, klickbar."
+      lead="Wähl eine Ausgabe, klick dich durch die Kapitel. Wo ein Beispiel dabei ist, kannst du es direkt im Browser ausführen und verändern."
+    />
+
+    <div class="edition-bar">
+      <nav class="seg" aria-label="Ausgabe">
+        {editions.map((e) => (
+          <a class="seg-opt" href={chapterHref(e.id, 1)} aria-current={e.id === editionId ? 'page' : undefined}>{e.data.label}</a>
+        ))}
+      </nav>
+      <div class="text-muted edition-meta">{edition.data.meta}</div>
+    </div>
+    <p class="highlights"><span class="strong">Neu in dieser Ausgabe:</span> {edition.data.highlights}</p>
+
+    <SplitLayout>
+      <SideNav
+        slot="side"
+        label="Kapitel"
+        searchPlaceholder="Kapitel suchen – z. B. „Promise“"
+        emptyText="Kein Kapitel passt zu"
+        searchFromUrl
+        items={chapters.map((c, i) => ({
+          href: chapterHref(editionId, i + 1),
+          label: c.data.title,
+          current: i + 1 === n,
+          search: searchText(c.data.title, c.data.en, c.body),
+        }))}
+      />
+      <article>
+        <h6 class="kicker chapter-kicker">Kapitel {n} · {chapter.data.en}</h6>
+        <h2 class="chapter-title">{chapter.data.title}</h2>
+        <Prose variant="chapter"><Content /></Prose>
+        {chapter.data.draft && (
+          <p class="draft">
+            <span class="tag tag-accent-2">Übersetzung in Arbeit</span>Dieses Kapitel ist noch nicht vollständig übersetzt. <a href={LINKS.github}>Hilf auf GitHub mit.</a>
+          </p>
+        )}
+        <Pager
+          prev={n > 1 ? chapterHref(editionId, n - 1) : undefined}
+          next={n < chapters.length ? chapterHref(editionId, n + 1) : undefined}
+          prevLabel="Vorheriges Kapitel"
+          nextLabel="Nächstes Kapitel"
+        />
+      </article>
+    </SplitLayout>
+  </main>
+</Base>
+
+<style>
+  .edition-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 15px 30px; margin: 30px 0 10px; }
+  .edition-meta { font-size: 14px; }
+  .highlights { font-size: 15px; max-width: 720px; }
+  .strong { font-weight: 600; }
+  .chapter-kicker { margin-bottom: 8px; }
+  .chapter-title { font-size: clamp(28px, 4.7vw, 36px); margin-bottom: 20px; text-wrap: balance; }
+  .draft { margin-top: 30px; font-size: 14px; }
+  .draft .tag { margin-right: 8px; }
+</style>

@@ -1,0 +1,12 @@
+---
+// Runnable code example. Markdown content gets the same markup from ```js live``` fences.
+import { liveEditorHtml } from '../lib/live-editor';
+
+interface Props {
+  code: string;
+  title?: string;
+}
+
+const { code, title } = Astro.props;
+---
+<Fragment set:html={liveEditorHtml(code, title)} />

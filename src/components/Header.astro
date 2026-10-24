@@ -1,0 +1,57 @@
+---
+export type NavKey = 'standard' | 'artikel' | 'tutorials' | 'blog' | 'ueber';
+
+interface Props {
+  current?: NavKey;
+  search?: boolean;
+}
+
+const { current, search = false } = Astro.props;
+
+const NAV: { key: NavKey; href: string; label: string }[] = [
+  { key: 'standard', href: '/standard/', label: 'Standard' },
+  { key: 'artikel', href: '/artikel/', label: 'Artikel' },
+  { key: 'tutorials', href: '/tutorials/', label: 'Tutorials' },
+  { key: 'blog', href: '/blog/', label: 'Blog' },
+  { key: 'ueber', href: '/ueber/', label: 'Über' },
+];
+---
+<header class="site-header container">
+  <a href="/" class="es-link brand">
+    <span class="brand-mark" aria-hidden="true">ES</span>
+    <span class="brand-word">EcmaScript<span class="brand-tld">.de</span></span>
+  </a>
+  {search && (
+    <form class="header-search" action="/standard/" method="get" role="search">
+      <input class="input" type="search" name="q" placeholder="Suchen …" aria-label="Suche" />
+    </form>
+  )}
+  <nav class="es-nav site-nav" aria-label="Hauptnavigation">
+    {NAV.map((item) => (
+      <a href={item.href} aria-current={item.key === current ? 'page' : undefined}>{item.label}</a>
+    ))}
+  </nav>
+  <button type="button" class="btn btn-secondary theme-toggle" data-theme-toggle>
+    <span class="theme-label-dark">Dunkel</span><span class="theme-label-light">Hell</span>
+  </button>
+</header>
+
+<style>
+  .site-header { display: flex; align-items: center; gap: 30px; padding-block: 20px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+  .brand-mark {
+    width: 30px; height: 30px; border: 2px solid currentColor; border-radius: var(--radius-lg);
+    display: grid; place-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
+  }
+  .brand-word { font-weight: 600; font-size: 19px; letter-spacing: -.01em; }
+  .brand-tld { color: var(--color-accent); }
+  .header-search { flex: 1 1 260px; max-width: 380px; }
+  .site-nav { display: flex; gap: 20px; flex-wrap: wrap; }
+  .theme-toggle { padding: 6px 12px; font-size: 13px; }
+
+  @media (max-width: 640px) {
+    .site-header { gap: 15px 20px; }
+    .header-search { order: 3; max-width: none; flex-basis: 100%; }
+  }
+</style>

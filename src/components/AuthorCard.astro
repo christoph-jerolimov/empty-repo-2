@@ -1,0 +1,31 @@
+---
+// Avatar, name and a short text. "byline" under articles, "team" on the Über page.
+import type { CollectionEntry } from 'astro:content';
+import Avatar from './Avatar.astro';
+
+interface Props {
+  author: CollectionEntry<'autoren'>;
+  variant: 'byline' | 'team';
+}
+
+const { author, variant } = Astro.props;
+const text = variant === 'byline' ? author.data.bio ?? author.data.team : author.data.team;
+---
+<div class:list={['author', variant]}>
+  <Avatar initials={author.data.initials} tone={author.data.tone} size={variant === 'team' ? 52 : 44} />
+  <div class="body">
+    <div class="name">{author.data.name}</div>
+    <p class:list={{ 'text-muted': variant === 'byline' }}>{text}</p>
+  </div>
+</div>
+
+<style>
+  .author { display: flex; gap: 15px; }
+  .byline { margin-top: 60px; align-items: center; flex-wrap: wrap; }
+  .byline .body { flex: 1; min-width: 240px; }
+  .team { align-items: flex-start; }
+  .name { font-weight: 600; }
+  .team .name { font-size: 18px; }
+  p { font-size: 14px; margin: 0; }
+  .team p { line-height: 1.55; margin-top: 4px; }
+</style>

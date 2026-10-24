@@ -1,0 +1,41 @@
+/* EcmaScript.de overrides on top of the Broadsheet design system (broadsheet.css).
+   Ported from project/site.css; layout rules that the prototype kept inline live here. */
+
+:root[data-theme="dark"] {
+  --color-bg: #1c1b1a; --color-surface: #292725; --color-text: #ece8e3;
+  --color-divider: color-mix(in srgb, #ece8e3 18%, transparent);
+  --color-accent: #62c5ee; --color-accent-2: #ff90b1;
+  --color-neutral-100: #2d2b2b; --color-neutral-200: #444141; --color-neutral-300: #605d5d; --color-neutral-400: #7d7979; --color-neutral-500: #9b9797; --color-neutral-600: #bab6b6; --color-neutral-700: #d7d3d3; --color-neutral-800: #eae7e7; --color-neutral-900: #f8f4f4;
+  --color-accent-100: #0a303e; --color-accent-200: #004961; --color-accent-300: #006786; --color-accent-400: #1186ac; --color-accent-500: #38a6cf; --color-accent-600: #62c5ee; --color-accent-700: #99e0ff; --color-accent-800: #cbeeff; --color-accent-900: #e9f8ff;
+  --color-accent-2-100: #4b1528; --color-accent-2-200: #790e3d; --color-accent-2-300: #aa0b56; --color-accent-2-400: #d82071; --color-accent-2-500: #ff458e; --color-accent-2-600: #ff90b1; --color-accent-2-700: #ffc0d0; --color-accent-2-800: #ffdee6; --color-accent-2-900: #fff1f4;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.5); --shadow-md: 0 3px 10px rgba(0,0,0,.55); --shadow-lg: 0 12px 32px rgba(0,0,0,.6);
+  color-scheme: dark;
+}
+html, body { background: var(--color-bg); color: var(--color-text); transition: background .2s, color .2s; }
+a { color: var(--color-accent); }
+a:hover { color: var(--color-accent-700); }
+code, pre, kbd, .es-code { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; }
+code { font-size: .9em; background: var(--color-surface); padding: 1px 5px; border-radius: var(--radius-md); }
+.es-nav a { color: inherit; text-decoration: none; font-size: 15px; }
+.es-nav a:hover, .es-nav a[aria-current="page"] { color: var(--color-accent); }
+.es-link { color: inherit; text-decoration: none; }
+.es-link:hover { color: var(--color-accent); }
+.es-row:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
+
+/* Theme toggle label: "Dunkel" in light mode, "Hell" in dark mode. */
+:root[data-theme="dark"] .theme-label-dark,
+:root:not([data-theme="dark"]) .theme-label-light { display: none; }
+
+/* Version switcher on the Standard page uses links instead of radios. */
+a.seg-opt { color: inherit; text-decoration: none; white-space: nowrap; }
+.seg-opt[aria-current="page"] { background: var(--color-accent); color: var(--color-bg); }
+.seg-opt:not([aria-current="page"]):hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); color: inherit; }
+.seg { flex-wrap: wrap; }
+
+/* Layout */
+.container { max-width: 1240px; margin-inline: auto; padding-inline: 40px; }
+.page-main { padding-top: 30px; }
+.kicker { color: var(--color-accent); }
+@media (max-width: 640px) {
+  .container { padding-inline: 20px; }
+}

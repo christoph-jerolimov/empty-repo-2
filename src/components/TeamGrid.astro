@@ -1,0 +1,14 @@
+---
+// Everyone in the authors collection, for the Über page.
+import { getCollection } from 'astro:content';
+import AuthorCard from './AuthorCard.astro';
+
+const team = (await getCollection('autoren')).sort((a, b) => a.data.order - b.data.order);
+---
+<div class="team wide">
+  {team.map((author) => <AuthorCard author={author} variant="team" />)}
+</div>
+
+<style>
+  .team { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 40px; max-width: 900px; margin-top: 15px; }
+</style>

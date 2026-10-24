@@ -1,0 +1,70 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageIntro from './PageIntro.astro';
+import SplitLayout from './SplitLayout.astro';
+import SideNav from './SideNav.astro';
+import Prose from './Prose.astro';
+import Pager from './Pager.astro';
+import { chapterHref, DEFAULT_EDITION, getTutorials, searchText, tutorialHref } from '../lib/content';
+
+interface Props {
+  id: string;
+}
+
+const tutorials = await getTutorials();
+const i = tutorials.findIndex((t) => t.id === Astro.props.id);
+const tut = tutorials[i];
+const { Content } = await render(tut);
+---
+<Base title={tut.data.title} description={tut.data.intro} current="tutorials">
+  <main class="container page-main">
+    <PageIntro
+      kicker="Tutorials"
+      title="Kurz, praktisch, zum Mitmachen."
+      lead="Jedes Tutorial ist in 10 bis 15 Minuten durch. Der Code läuft direkt hier auf der Seite – ändere ihn, mach ihn kaputt, repariere ihn."
+    />
+
+    <SplitLayout>
+      <SideNav
+        slot="side"
+        label="Tutorials"
+        searchPlaceholder="Tutorial suchen"
+        size="roomy"
+        items={tutorials.map((t, k) => ({
+          href: tutorialHref(t.id),
+          label: t.data.title,
+          sub: `${t.data.level} · ${t.data.minutes} Min.`,
+          current: k === i,
+          search: searchText(t.data.title, t.data.intro),
+        }))}
+      />
+      <article>
+        <div class="head-meta"><span class="tag tag-accent">{tut.data.level}</span><span class="text-muted">{tut.data.minutes} Minuten · {tut.data.since}</span></div>
+        <h2 class="title">{tut.data.title}</h2>
+        <p class="intro">{tut.data.intro}</p>
+        <Prose variant="tutorial"><Content /></Prose>
+        <section class="task">
+          <h4>Aufgabe</h4>
+          <p>{tut.data.task}</p>
+          <p class="text-muted spec">Im Standard: <a href={chapterHref(DEFAULT_EDITION, tut.data.specChapter)}>{tut.data.spec}</a></p>
+        </section>
+        <Pager
+          prev={tutorials[i - 1] && tutorialHref(tutorials[i - 1].id)}
+          next={tutorials[i + 1] && tutorialHref(tutorials[i + 1].id)}
+          prevLabel="Vorheriges"
+          nextLabel="Nächstes Tutorial"
+        />
+      </article>
+    </SplitLayout>
+  </main>
+</Base>
+
+<style>
+  .head-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; font-size: 13px; }
+  .title { font-size: clamp(28px, 4.7vw, 36px); margin-bottom: 15px; text-wrap: balance; }
+  .intro { font-size: 18px; line-height: 1.55; font-style: italic; }
+  .task { margin-top: 40px; padding-top: 20px; }
+  .task p { font-size: 16px; line-height: 1.6; }
+  .task p.spec { font-size: 14px; }
+</style>

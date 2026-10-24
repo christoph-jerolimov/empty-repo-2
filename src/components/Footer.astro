@@ -1,0 +1,39 @@
+---
+import { LINKS } from '../data/site';
+---
+<footer class="site-footer container">
+  <div>
+    <div class="footer-title">Newsletter</div>
+    <p class="text-muted small">Einmal im Monat: neue Artikel, Tutorials und was TC39 beschlossen hat.</p>
+    <form class="newsletter" data-newsletter>
+      <input class="input" type="email" name="email" required placeholder="du@beispiel.de" aria-label="E-Mail" />
+      <button class="btn btn-primary" type="submit">Abonnieren</button>
+    </form>
+  </div>
+  <div>
+    <div class="footer-title">Mitmachen</div>
+    <div class="footer-links">
+      <a href={LINKS.github}>GitHub – Quelltext &amp; Übersetzungen</a>
+      <a href={LINKS.rss}>RSS-Feed</a>
+      <a href={LINKS.donate}>Spenden – Serverkosten decken</a>
+    </div>
+  </div>
+  <div>
+    <div class="footer-title">Hinweis</div>
+    <p class="text-muted small">EcmaScript.de ist ein unabhängiges Community-Projekt – nicht Ecma International, nicht TC39. Die offizielle Spezifikation findest du unter <a href={LINKS.spec}>tc39.es/ecma262</a>.</p>
+    <a href="/ueber/#impressum">Impressum</a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 80px; padding-top: 40px; padding-bottom: 50px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 40px;
+    font-size: 14px;
+  }
+  .footer-title { font-weight: 600; font-size: 17px; margin-bottom: 10px; }
+  .small { font-size: 13px; }
+  .newsletter { display: flex; gap: 10px; }
+  .newsletter .input { min-width: 0; }
+  .footer-links { display: flex; flex-direction: column; gap: 6px; }
+</style>

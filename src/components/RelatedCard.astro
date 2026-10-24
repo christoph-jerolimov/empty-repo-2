@@ -1,0 +1,21 @@
+---
+// Small card in the "Weiterlesen" row under articles.
+interface Props {
+  href: string;
+  tag: string;
+  title: string;
+  minutes: number;
+}
+
+const { href, tag, title, minutes } = Astro.props;
+---
+<a href={href} class="es-link">
+  <span class="tag tag-accent">{tag}</span>
+  <h4>{title}</h4>
+  <p class="text-muted">{minutes} Min.</p>
+</a>
+
+<style>
+  h4 { font-size: 20px; margin: 8px 0; }
+  p { font-size: 14px; margin: 0; }
+</style>

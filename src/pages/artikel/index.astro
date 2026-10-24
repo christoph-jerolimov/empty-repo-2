@@ -1,0 +1,78 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import { articleHref, dateShort, getArticles, getAuthor, searchText } from '../../lib/content';
+
+const articles = await Promise.all(
+  (await getArticles()).map(async (a) => ({ ...a, author: await getAuthor(a.data.author) })),
+);
+const tags = ['Alle', ...new Set(articles.map((a) => a.data.tag))];
+---
+<Base title="Artikel" description="Hintergründe, Erklärstücke und Meinung zu JavaScript und dem ECMAScript-Standard." current="artikel">
+  <main class="container page-main" data-filter>
+    <PageIntro
+      kicker="Artikel"
+      title="Längere Texte über die Sprache – und die Leute dahinter."
+      lead="Hintergründe, Erklärstücke, Meinung. Alles, was länger als zehn Minuten braucht und mehr will als ein Codebeispiel."
+    />
+
+    <div class="filters">
+      <input class="input" type="search" placeholder="Artikel durchsuchen" aria-label="Artikel durchsuchen" data-filter-input />
+      <div class="tags" role="group" aria-label="Nach Thema filtern">
+        {tags.map((t, i) => (
+          <button type="button" class="tag filter-tag" data-filter-tag={t} aria-pressed={i === 0 ? 'true' : 'false'}>{t}</button>
+        ))}
+      </div>
+    </div>
+
+    <div class="list">
+      {articles.map((a) => (
+        <a
+          href={articleHref(a.id)}
+          class="es-link es-row item"
+          data-filter-item
+          data-tag={a.data.tag}
+          data-search={searchText(a.data.title, a.data.teaser, a.author.data.name)}
+        >
+          <div class="text-muted item-date">{dateShort(a.data.date)}<br />{a.data.minutes} Min.</div>
+          <div>
+            <div class="item-meta"><span class="tag tag-accent">{a.data.tag}</span><span class="text-muted item-author">{a.author.data.name}</span></div>
+            <h3>{a.data.title}</h3>
+            <p>{a.data.teaser}</p>
+          </div>
+        </a>
+      ))}
+      <p class="text-muted empty" data-filter-empty hidden>Nichts gefunden. Vielleicht ein <a href="/tutorials/">Tutorial</a>?</p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 20px; align-items: center; }
+  .filters .input { max-width: 340px; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-tag {
+    cursor: pointer; border: 1px solid var(--color-accent); background: transparent; color: var(--color-accent);
+    font: inherit; font-size: 12px; padding: 4px 12px;
+  }
+  .filter-tag[aria-pressed='true'] { background: var(--color-accent); color: var(--color-bg); }
+
+  .list { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 820px; }
+  .item {
+    display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 20px; padding: 25px 10px;
+    border-radius: var(--radius-md); margin: 0 -10px; align-items: baseline;
+  }
+  .item[hidden] { display: none; }
+  .item-date { font-size: 13px; line-height: 1.5; }
+  .item-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+  .item-author { font-size: 12px; }
+  .item h3 { font-size: 26px; margin-bottom: 8px; text-wrap: balance; }
+  .item p { font-size: 15px; line-height: 1.55; margin: 0; opacity: .85; }
+  .empty { padding: 25px 0; }
+
+  @media (max-width: 640px) {
+    .item { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .item-date br { display: none; }
+    .item h3 { font-size: 22px; }
+  }
+</style>

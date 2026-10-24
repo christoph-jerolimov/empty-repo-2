@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css"></helmet>
+<header style="display:flex;align-items:center;gap:30px;padding:20px 40px;max-width:1240px;margin:0 auto;flex-wrap:wrap">
+  <a href="Startseite.dc.html" class="es-link" style="display:flex;align-items:center;gap:10px;margin-right:auto">
+    <span style="width:30px;height:30px;border:2px solid currentColor;border-radius:var(--radius-lg);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">ES</span>
+    <span style="font-weight:600;font-size:19px;letter-spacing:-.01em">EcmaScript<span style="color:var(--color-accent)">.de</span></span>
+  </a>
+  <nav class="es-nav" style="display:flex;gap:20px;flex-wrap:wrap">
+    <a href="Standard.dc.html">Standard</a><a href="Artikel.dc.html" aria-current="page">Artikel</a><a href="Tutorials.dc.html">Tutorials</a><a href="Blog.dc.html">Blog</a><a href="Ueber.dc.html">Über</a>
+  </nav>
+  <button onClick="{{ toggleTheme }}" class="btn btn-secondary" style="padding:6px 12px;font-size:13px">{{ themeLabel }}</button>
+</header>
+
+<main style="max-width:1240px;margin:0 auto;padding:30px 40px 0">
+  <a href="Artikel.dc.html" style="font-size:14px;text-decoration:none">← Alle Artikel</a>
+  <article style="max-width:720px;margin-top:20px">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:15px;flex-wrap:wrap"><span class="tag tag-accent">ES2025</span><span class="text-muted" style="font-size:13px">Lena Hartmann · 12. September 2026 · 14 Min. Lesezeit</span></div>
+    <h1 style="font-size:52px;margin-bottom:20px;text-wrap:balance">Iterator-Helfer: Endlich lazy, endlich lesbar</h1>
+    <p style="font-size:21px;line-height:1.45;font-style:italic;margin-bottom:40px">ES2025 gibt jedem Iterator <code>map</code>, <code>filter</code>, <code>take</code> und ein paar Freunde mit. Das klingt nach Zucker – ist aber eine ziemlich grundlegende Änderung daran, wie wir über Datenströme in JavaScript denken.</p>
+
+    <h2 style="font-size:30px;margin-top:40px">Das Problem mit Arrays</h2>
+    <p style="font-size:17px;line-height:1.65">Seit ES5 haben wir <code>map</code>, <code>filter</code> und <code>reduce</code> auf Arrays. Sie sind großartig – und sie haben einen Haken: Jeder Schritt erzeugt ein neues, vollständiges Array. Bei drei Elementen egal. Bei drei Millionen nicht mehr. Und bei einer unendlichen Quelle geht es gar nicht.</p>
+    <p style="font-size:17px;line-height:1.65">Generatoren konnten das seit ES2015 lösen, aber die Ergonomie war schlecht. Wer einen Generator filtern wollte, musste einen zweiten Generator schreiben. Das hat kaum jemand getan.</p>
+    <dc-import name="LiveEditor" title="Vorher: Array-Kette" code="{{ code1 }}" hint-size="100%,220px"></dc-import>
+
+    <h2 style="font-size:30px;margin-top:50px">Was ES2025 ändert</h2>
+    <p style="font-size:17px;line-height:1.65">Alle eingebauten Iteratoren – aus Arrays, Maps, Sets, Generatoren, <code>matchAll</code>, … – erben jetzt von <code>Iterator.prototype</code>, und das hat Methoden: <code>map</code>, <code>filter</code>, <code>take</code>, <code>drop</code>, <code>flatMap</code>, <code>reduce</code>, <code>toArray</code>, <code>forEach</code>, <code>some</code>, <code>every</code>, <code>find</code>.</p>
+    <p style="font-size:17px;line-height:1.65">Der Unterschied: Die Kette ist <em>lazy</em>. Nichts passiert, bis jemand den nächsten Wert abfragt. <code>take(5)</code> auf einer unendlichen Quelle ist deshalb völlig in Ordnung.</p>
+    <dc-import name="LiveEditor" title="Nachher: Iterator-Kette" code="{{ code2 }}" hint-size="100%,260px"></dc-import>
+
+    <h2 style="font-size:30px;margin-top:50px">Wo Arrays trotzdem gewinnen</h2>
+    <p style="font-size:17px;line-height:1.65">Iteratoren sind Einwegware. Einmal durchlaufen, leer. Es gibt kein <code>length</code>, kein <code>at(-1)</code>, kein zweites <code>for…of</code>. Wenn du deine Daten sowieso komplett im Speicher hast und mehrfach brauchst, bleib beim Array. Die Helfer sind für Ströme, nicht für Listen.</p>
+    <p style="font-size:17px;line-height:1.65">Ein zweiter Punkt: Die Fehlersuche. Ein Stacktrace durch fünf verschachtelte lazy Schritte liest sich anders als einer durch fünf Array-Aufrufe. Chrome und Firefox haben nachgezogen, aber gewöhnen musst du dich trotzdem.</p>
+    <dc-import name="LiveEditor" title="Einwegware" code="{{ code3 }}" hint-size="100%,220px"></dc-import>
+
+    <h2 style="font-size:30px;margin-top:50px">Fazit</h2>
+    <p style="font-size:17px;line-height:1.65">Iterator-Helfer sind kein Ersatz für Array-Methoden, sondern ihre Ergänzung für alles, was fließt: Zeilen aus einer Datei, Events, Seiten aus einer API, Generatoren. Wenn du bisher aus Bequemlichkeit <code>[...gen]</code> geschrieben hast, um dann <code>.filter</code> aufzurufen – das kannst du dir jetzt sparen.</p>
+    <p style="font-size:15px;margin-top:30px" class="text-muted">Im Standard: <a href="Standard.dc.html">Kapitel 27 – Kontrollabstraktionen</a> · Der Vorschlag: <a href="#">tc39/proposal-iterator-helpers</a></p>
+
+    <div style="margin-top:60px;display:flex;gap:15px;align-items:baseline;flex-wrap:wrap">
+      <span style="width:44px;height:44px;border-radius:50%;background:var(--color-accent-200);color:var(--color-accent-800);display:grid;place-items:center;font-weight:600;align-self:center">LH</span>
+      <div style="flex:1;min-width:240px"><div style="font-weight:600">Lena Hartmann</div><p class="text-muted" style="font-size:14px;margin:0">Schreibt seit 2019 über die Sprache, übersetzt Kapitel 22 bis 27 und mag Generatoren mehr, als gesund ist.</p></div>
+    </div>
+  </article>
+
+  <section style="margin-top:80px;max-width:820px">
+    <h6 style="color:var(--color-accent)">Weiterlesen</h6>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:30px">
+      <a href="Artikel-Detail.dc.html" class="es-link"><span class="tag tag-accent" style="margin-bottom:8px">Hintergrund</span><h4 style="font-size:20px;margin:8px 0">Was macht TC39 eigentlich – und wer sitzt da?</h4><p class="text-muted" style="font-size:14px;margin:0">11 Min.</p></a>
+      <a href="Tutorials.dc.html" class="es-link"><span class="tag tag-accent" style="margin-bottom:8px">Tutorial</span><h4 style="font-size:20px;margin:8px 0">Generatoren in 15 Minuten</h4><p class="text-muted" style="font-size:14px;margin:0">15 Min.</p></a>
+      <a href="Artikel-Detail.dc.html" class="es-link"><span class="tag tag-accent" style="margin-bottom:8px">Vorschlag</span><h4 style="font-size:20px;margin:8px 0">Temporal: Datum und Zeit ohne Tränen</h4><p class="text-muted" style="font-size:14px;margin:0">18 Min.</p></a>
+    </div>
+  </section>
+</main>
+
+<footer style="max-width:1240px;margin:80px auto 0;padding:40px 40px 50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;font-size:14px">
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Newsletter</div><p class="text-muted" style="font-size:13px">Einmal im Monat: neue Artikel, Tutorials und was TC39 beschlossen hat.</p><form style="display:flex;gap:10px" onSubmit="{{ prevent }}"><input class="input" type="email" placeholder="du@beispiel.de" aria-label="E-Mail"><button class="btn btn-primary" type="submit">Abonnieren</button></form></div>
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Mitmachen</div><div style="display:flex;flex-direction:column;gap:6px"><a href="#">GitHub – Quelltext &amp; Übersetzungen</a><a href="#">RSS-Feed</a><a href="#">Spenden – Serverkosten decken</a></div></div>
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Hinweis</div><p class="text-muted" style="font-size:13px">EcmaScript.de ist ein unabhängiges Community-Projekt – nicht Ecma International, nicht TC39. Die offizielle Spezifikation findest du unter tc39.es/ecma262.</p><a href="Ueber.dc.html">Impressum</a></div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { theme: 'light' };
+  componentDidMount() { const t = localStorage.getItem('esde-theme') || 'light'; document.documentElement.dataset.theme = t; this.setState({ theme: t }); }
+  toggleTheme = () => { const t = this.state.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('esde-theme', t); document.documentElement.dataset.theme = t; this.setState({ theme: t }); };
+  renderVals() {
+    return {
+      themeLabel: this.state.theme === 'dark' ? 'Hell' : 'Dunkel', toggleTheme: this.toggleTheme, prevent: e => e.preventDefault(),
+      code1: 'const zahlen = Array.from({ length: 1_000_000 }, (_, i) => i);\n\nconst t0 = performance.now();\nconst ergebnis = zahlen\n  .map(n => n * n)        // 1 Mio. Elemente\n  .filter(n => n % 3 === 0) // ~333k Elemente\n  .slice(0, 5);           // 5 Elemente\nconsole.log(ergebnis, `${(performance.now() - t0).toFixed(1)} ms`);',
+      code2: 'function* natuerliche() { let n = 0; while (true) yield n++; }\n\nconst t0 = performance.now();\nconst ergebnis = natuerliche()   // unendlich!\n  .map(n => n * n)\n  .filter(n => n % 3 === 0)\n  .take(5)\n  .toArray();\nconsole.log(ergebnis, `${(performance.now() - t0).toFixed(2)} ms`);\n\n// funktioniert auf jedem Iterator:\nconsole.log(new Set(["a", "b", "c"]).values().map(s => s.toUpperCase()).toArray());',
+      code3: 'const it = [1, 2, 3].values().map(n => n * 10);\n\nconsole.log([...it]);   // erster Durchlauf\nconsole.log([...it]);   // zweiter Durchlauf: leer\n\nconsole.log(typeof it.length, typeof it.at);',
+    };
+  }
+}
+</script>
+</body>
+</html>

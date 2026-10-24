@@ -1,0 +1,23 @@
+---
+// Small-caps headed block for Impressum and Datenschutz.
+interface Props {
+  id: string;
+  title: string;
+  /** Render the text as a greyed-out placeholder still to be filled in. */
+  placeholder?: boolean;
+  first?: boolean;
+}
+
+const { id, title, placeholder = false, first = false } = Astro.props;
+---
+<section id={id} class:list={['legal', { first, placeholder }]}>
+  <h6 class="kicker">{title}</h6>
+  <slot />
+</section>
+
+<style>
+  .legal { margin-top: 40px; scroll-margin-top: 20px; }
+  .legal.first { margin-top: 80px; }
+  .legal :global(p) { font-size: 15px; line-height: 1.7; }
+  .placeholder :global(p) { margin: 0; font-style: italic; color: color-mix(in srgb, var(--color-text) 65%, transparent); }
+</style>

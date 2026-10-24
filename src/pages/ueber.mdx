@@ -1,0 +1,37 @@
+---
+layout: ../layouts/ProsePage.astro
+title: Über uns & Impressum
+nav: ueber
+description: Wer hinter EcmaScript.de steckt, wie du mitmachen kannst – und das Impressum.
+kicker: Über EcmaScript.de
+headline: Der Standard, auf Deutsch, von Leuten, die ihn gern lesen.
+lead: ECMA-262 ist das genaueste Dokument, das es über JavaScript gibt – und eines der am wenigsten gelesenen. Wir übersetzen es, kommentieren es und hängen Beispiele dran, die du direkt ausführen kannst. Für Einsteiger, die wissen wollen, warum; für Profis, die es genau wissen wollen; für alle, die unterrichten.
+---
+import TeamGrid from '../components/TeamGrid.astro';
+import LegalSection from '../components/LegalSection.astro';
+import { LINKS } from '../data/site';
+
+## Nicht offiziell. Absichtlich.
+
+EcmaScript.de gehört nicht zu Ecma International und nicht zu TC39. Niemand von uns sitzt im Komitee. Das ist kein Mangel, sondern der Punkt: Wir dürfen erklären, meinen und vereinfachen – das darf der Standard nicht. Wo wir vom Original abweichen, sagen wir es. Die verbindliche Fassung findest du immer unter <a href={LINKS.spec}>tc39.es/ecma262</a>.
+
+## Wer hier schreibt
+
+<TeamGrid />
+
+## Mitmachen
+
+Alles – Übersetzungen, Beispiele, die Seite selbst – liegt auf <a href={LINKS.github}>GitHub</a>. Tippfehler korrigierst du direkt im Browser; für ein ganzes Kapitel melde dich vorher kurz im Issue-Tracker, damit wir nicht doppelt arbeiten. Wer lieber Geld als Zeit gibt: <a href={LINKS.donate}>Spenden</a> decken Domain und Server, mehr nicht.
+
+<LegalSection id="impressum" title="Impressum" placeholder first>
+  Angaben gemäß § 5 DDG<br />
+  [Name des Betreibers]<br />
+  [Straße und Hausnummer]<br />
+  [PLZ und Ort]<br />
+  E-Mail: [kontakt@ecmascript.de]<br /><br />
+  Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV: [Name]
+</LegalSection>
+
+<LegalSection id="datenschutz" title="Datenschutz">
+  Diese Seite setzt keine Tracking-Cookies. Der Live-Editor führt Code ausschließlich in deinem Browser aus; nichts wird übertragen. Für den Newsletter speichern wir deine E-Mail-Adresse bis zur Abmeldung. [Vollständige Datenschutzerklärung ergänzen.]
+</LegalSection>

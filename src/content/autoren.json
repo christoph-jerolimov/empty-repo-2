@@ -1,0 +1,30 @@
+[
+  {
+    "id": "lena-hartmann",
+    "name": "Lena Hartmann",
+    "short": "Lena",
+    "initials": "LH",
+    "tone": "accent",
+    "order": 1,
+    "team": "Kapitel 22–27, Artikel über Vorschläge. Compiler-Bau im Studium, seitdem fasziniert von Grammatiken.",
+    "bio": "Schreibt seit 2019 über die Sprache, übersetzt Kapitel 22 bis 27 und mag Generatoren mehr, als gesund ist."
+  },
+  {
+    "id": "jonas-weber",
+    "name": "Jonas Weber",
+    "short": "Jonas",
+    "initials": "JW",
+    "tone": "accent-2",
+    "order": 2,
+    "team": "Kapitel 1–12, Technik der Seite, Live-Editor. Unterrichtet Web-Entwicklung an einer Berufsschule."
+  },
+  {
+    "id": "mira-sattler",
+    "name": "Mira Sattler",
+    "short": "Mira",
+    "initials": "MS",
+    "tone": "neutral",
+    "order": 3,
+    "team": "Kapitel 13–21, Tutorials, Lektorat. Frontend-Entwicklerin, findet Semikolons wichtig."
+  }
+]

@@ -1,0 +1,7 @@
+---
+import TutorialView from '../../components/TutorialView.astro';
+import { getTutorials } from '../../lib/content';
+
+const [first] = await getTutorials();
+---
+<TutorialView id={first.id} />

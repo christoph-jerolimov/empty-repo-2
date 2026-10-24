@@ -1,0 +1,27 @@
+---
+// Labelled progress bar ("Übersetzungsstand").
+interface Props {
+  label: string;
+  value: number;
+  total: number;
+  note?: string;
+}
+
+const { label, value, total, note } = Astro.props;
+---
+<div class="progress-box">
+  <div class="row"><span>{label}</span><span class="strong">{value} / {total}</span></div>
+  <div class="bar" role="progressbar" aria-label={label} aria-valuenow={value} aria-valuemin="0" aria-valuemax={total}>
+    <div style={`width:${Math.round((value / total) * 100)}%`}></div>
+  </div>
+  {note && <span class="text-muted note">{note}</span>}
+</div>
+
+<style>
+  .progress-box { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+  .row { display: flex; justify-content: space-between; }
+  .strong { font-weight: 600; }
+  .bar { height: 4px; background: var(--color-surface); border-radius: 2px; }
+  .bar > div { height: 100%; background: var(--color-accent); border-radius: 2px; }
+  .note { font-size: 12px; }
+</style>

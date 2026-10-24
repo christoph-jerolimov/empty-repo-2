@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="site.css"></helmet>
+<header style="display:flex;align-items:center;gap:30px;padding:20px 40px;max-width:1240px;margin:0 auto;flex-wrap:wrap">
+  <a href="Startseite.dc.html" class="es-link" style="display:flex;align-items:center;gap:10px;margin-right:auto">
+    <span style="width:30px;height:30px;border:2px solid currentColor;border-radius:var(--radius-lg);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500">ES</span>
+    <span style="font-weight:600;font-size:19px;letter-spacing:-.01em">EcmaScript<span style="color:var(--color-accent)">.de</span></span>
+  </a>
+  <nav class="es-nav" style="display:flex;gap:20px;flex-wrap:wrap">
+    <a href="Standard.dc.html">Standard</a><a href="Artikel.dc.html">Artikel</a><a href="Tutorials.dc.html">Tutorials</a><a href="Blog.dc.html" aria-current="page">Blog</a><a href="Ueber.dc.html">Über</a>
+  </nav>
+  <button onClick="{{ toggleTheme }}" class="btn btn-secondary" style="padding:6px 12px;font-size:13px">{{ themeLabel }}</button>
+</header>
+
+<main style="max-width:1240px;margin:0 auto;padding:30px 40px 0">
+  <div style="max-width:720px">
+    <h6 style="color:var(--color-accent);margin-bottom:10px">Blog</h6>
+    <h1 style="font-size:48px;margin-bottom:15px;text-wrap:balance">Was auf der Seite und im Komitee passiert.</h1>
+    <p style="font-size:18px;line-height:1.5;max-width:600px">Kurze Notizen: neue Übersetzungen, TC39-Rückblicke, Änderungen an EcmaScript.de. Auch als <a href="#">RSS</a>.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:60px;margin-top:50px;align-items:flex-start">
+    <div style="flex:3 1 480px;min-width:0;max-width:760px">
+      <sc-for list="{{ posts }}" as="p" hint-placeholder-count="4">
+        <article style="margin-bottom:60px">
+          <div class="text-muted" style="font-size:13px;margin-bottom:8px">{{ p.date }} · {{ p.author }}</div>
+          <h2 style="font-size:32px;margin-bottom:12px;text-wrap:balance"><a href="#" class="es-link">{{ p.title }}</a></h2>
+          <sc-for list="{{ p.paras }}" as="t" hint-placeholder-count="2"><p style="font-size:16px;line-height:1.6">{{ t }}</p></sc-for>
+          <sc-if value="{{ p.hasCode }}" hint-placeholder-val="{{ false }}"><dc-import name="LiveEditor" title="{{ p.codeTitle }}" code="{{ p.code }}" hint-size="100%,200px"></dc-import></sc-if>
+        </article>
+      </sc-for>
+    </div>
+    <aside style="flex:1 1 240px;max-width:300px">
+      <h6 style="color:var(--color-accent)">Nächstes TC39-Treffen</h6>
+      <p style="font-size:15px;line-height:1.5">13.–15. Oktober 2026, Tokio (hybrid). Tagesordnung erscheint zwei Wochen vorher im <a href="#">Agenda-Repo</a>.</p>
+      <h6 style="color:var(--color-accent);margin-top:30px">Übersetzungsstand</h6>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:14px">
+        <div style="display:flex;justify-content:space-between"><span>Kapitel übersetzt</span><span style="font-weight:600">24 / 29</span></div>
+        <div style="height:4px;background:var(--color-surface);border-radius:2px"><div style="width:83%;height:100%;background:var(--color-accent);border-radius:2px"></div></div>
+        <span class="text-muted" style="font-size:12px">Fehlen: 3, 8, 29 und Anhänge A–F</span>
+      </div>
+      <h6 style="color:var(--color-accent);margin-top:30px">Archiv</h6>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:14px"><a href="#">September 2026</a><a href="#">August 2026</a><a href="#">Juli 2026</a><a href="#">Juni 2026</a></div>
+    </aside>
+  </div>
+</main>
+
+<footer style="max-width:1240px;margin:80px auto 0;padding:40px 40px 50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;font-size:14px">
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Newsletter</div><p class="text-muted" style="font-size:13px">Einmal im Monat: neue Artikel, Tutorials und was TC39 beschlossen hat.</p><form style="display:flex;gap:10px" onSubmit="{{ prevent }}"><input class="input" type="email" placeholder="du@beispiel.de" aria-label="E-Mail"><button class="btn btn-primary" type="submit">Abonnieren</button></form></div>
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Mitmachen</div><div style="display:flex;flex-direction:column;gap:6px"><a href="#">GitHub – Quelltext &amp; Übersetzungen</a><a href="#">RSS-Feed</a><a href="#">Spenden – Serverkosten decken</a></div></div>
+  <div><div style="font-weight:600;font-size:17px;margin-bottom:10px">Hinweis</div><p class="text-muted" style="font-size:13px">EcmaScript.de ist ein unabhängiges Community-Projekt – nicht Ecma International, nicht TC39. Die offizielle Spezifikation findest du unter tc39.es/ecma262.</p><a href="Ueber.dc.html">Impressum</a></div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const POSTS = [
+  { title: 'Der Live-Editor ist da – überall', date: '24. September 2026', author: 'Jonas', paras: ['Bisher konntest du Code auf EcmaScript.de nur lesen. Ab heute läuft jedes Beispiel direkt im Browser: im Standard, in Artikeln, in Tutorials, hier im Blog. Links der Code, rechts die Konsole. Ändere, was du willst – nichts davon verlässt deinen Browser.', 'Async-Code funktioniert auch, Top-Level await inklusive. Wer Bugs findet: GitHub-Issue, bitte.'], code: 'console.log("Hallo aus dem Blog!");\nconsole.log([1, 2, 3].map(n => n ** 2));\nawait new Promise(r => setTimeout(r, 30));\nconsole.info("… und 30 ms später");', codeTitle: 'Probier’s aus' },
+  { title: 'Rückblick: TC39 im Juli', date: '2. August 2026', author: 'Lena', paras: ['Das 109. Treffen hat zwei Vorschläge auf Stage 4 gehoben, drei auf Stage 3. Am interessantesten für den Alltag: die Decorators-Diskussion ist nach langem Stillstand wieder in Bewegung, und Temporal ist in allen großen Engines hinter Flags oder bereits standardmäßig verfügbar.', 'Wir haben die Kapitelübersicht für die ES2026-Ausgabe entsprechend aktualisiert.'] },
+  { title: 'ES2025 ist da – was drin ist', date: '27. Juni 2026', author: 'Mira', paras: ['Die Ecma-Generalversammlung hat die 16. Ausgabe verabschiedet. Die für uns wichtigsten Neuerungen: Iterator-Helfer, Set-Methoden, Import-Attribute mit JSON-Modulen, RegExp-Modifier und Promise.try. Kapitel 24 und 27 sind bereits übersetzt.'], code: 'console.log(await Promise.try(() => "läuft synchron oder asynchron – egal"));\nconsole.log(/(?i:hallo) Welt/.test("HALLO Welt"));', codeTitle: 'Zwei ES2025-Neuheiten' },
+  { title: 'Willkommen auf EcmaScript.de', date: '15. Mai 2026', author: 'Jonas', paras: ['Wir sind drei Leute, die den ECMAScript-Standard auf Deutsch lesbar machen wollen. Nicht als Wort-für-Wort-Übersetzung – die wäre genauso trocken wie das Original –, sondern kommentiert, mit Beispielen und in einer Sprache, die man auch nach Feierabend versteht.', 'Wir sind nicht offiziell. Wir haben nichts mit Ecma International oder TC39 zu tun, außer dass wir ihre Arbeit sehr schätzen. Wenn du Fehler findest oder mitübersetzen willst: Alles liegt auf GitHub.'] },
+];
+class Component extends DCLogic {
+  state = { theme: 'light' };
+  componentDidMount() { const t = localStorage.getItem('esde-theme') || 'light'; document.documentElement.dataset.theme = t; this.setState({ theme: t }); }
+  toggleTheme = () => { const t = this.state.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('esde-theme', t); document.documentElement.dataset.theme = t; this.setState({ theme: t }); };
+  renderVals() {
+    return { themeLabel: this.state.theme === 'dark' ? 'Hell' : 'Dunkel', toggleTheme: this.toggleTheme, prevent: e => e.preventDefault(), posts: POSTS.map(p => ({ ...p, hasCode: !!p.code, code: p.code || '', codeTitle: p.codeTitle || '' })) };
+  }
+}
+</script>
+</body>
+</html>
